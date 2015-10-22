@@ -5,7 +5,7 @@ setup(
     name = 'envitro',
     version = '0.1.0',
     packages = find_packages(),
-    description = '',
+    description = 'A module to read environment variables.',
     license = 'Apache 2',
     author = 'Marc Meszaros',
     author_email = 'me@marcmeszaros.com',
