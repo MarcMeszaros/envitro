@@ -9,7 +9,7 @@ setup(
     license = 'Apache 2',
     author = 'Marc Meszaros',
     author_email = 'me@marcmeszaros.com',
-    url = 'https://github.com/marcmeszaros/envitro',
+    url = 'https://github.com/MarcMeszaros/envitro',
     keywords = [
         'config', 'environment', '12factor'
     ],
