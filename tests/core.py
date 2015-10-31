@@ -91,6 +91,12 @@ class TestCore(unittest.TestCase):
         self.assert_get_set_bool('', False)
         self.assert_get_set_bool(' ', False)
 
+    def test_default_bool(self):
+        if 'DOES_NOT_EXIST' in os.environ:
+            del os.environ['DOES_NOT_EXIST']
+        self.assertTrue(envitro.bool('DOES_NOT_EXIST', True))
+        self.assertFalse(envitro.bool('DOES_NOT_EXIST', False))
+
     def test_invalid(self):
         if 'DOES_NOT_EXIST' in os.environ:
             del os.environ['DOES_NOT_EXIST']
@@ -101,3 +107,12 @@ class TestCore(unittest.TestCase):
         envitro.set('INVALID_BOOL', 'nope')
         with self.assertRaises(ValueError):
             envitro.bool('INVALID_BOOL')
+
+    def test_nested_default(self):
+        self.assertEqual(envitro.int('TEST_NOPE_INT', envitro.str('TEST_NOPE_STR', '123')), 123)
+        self.assertEqual(envitro.str('TEST_NOPE_STR', envitro.int('TEST_NOPE_INT', 123)), '123')
+        self.assertEqual(envitro.bool('TEST_NOPE_BOOL', envitro.int('TEST_NOPE_INT', 123)), True)
+        self.assertEqual(envitro.bool('TEST_NOPE_BOOL', envitro.int('TEST_NOPE_INT', 0)), False)
+        self.assertEqual(envitro.bool('TEST_NOPE_BOOL', envitro.int('TEST_NOPE_INT', 123)), True)
+        self.assertEqual(envitro.bool('TEST_NOPE_BOOL', envitro.str('TEST_NOPE_STR', 'false')), False)
+        self.assertEqual(envitro.bool('TEST_NOPE_BOOL', envitro.str('TEST_NOPE_STR', '')), False)

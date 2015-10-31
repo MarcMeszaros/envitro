@@ -30,41 +30,47 @@ def set(name, value):
     elif environ.get(name):
         del environ[name]
 
-def get(val, default=None):
+def get(name, default=None):
     """
     Get the raw env value, use the default, or throw an exception
     if both the raw value and default are null.
     """
-    raw_value = environ.get(val)
+    raw_value = environ.get(name)
     if raw_value or raw_value == '':
         return raw_value
-    elif default or (isinstance(default, builtins.int) and default == 0):
+    elif default is not None:
         return default
     else:
-        raise KeyError('Set the "{0}" environment variable'.format(val))
+        raise KeyError('Set the "{0}" environment variable'.format(name))
 
-def str(val, default=None):
+def str(name, default=None):
     """
     Gets a string based environment value or default.
     """
-    return builtins.str(get(val, default).strip())
+    return builtins.str(get(name, default)).strip()
 
 
-def bool(val, default=None):
+def bool(name, default=None):
     """
     Gets a string based environment value and returns the Python boolean
     equivalent or default.
     """
-    value = get(val, default)
+    value = get(name, default)
     if isinstance(value, builtins.bool):
         return value
+    elif isinstance(value, builtins.int):
+        return True if value > 0 else False
     else:
-        return builtins.bool(strtobool(builtins.str(value).lower().strip()))
+        value_str = builtins.str(value).lower().strip()
+        return strtobool(value_str)
 
 
-def int(val, default=None):
+def int(name, default=None):
     """
     Gets a string based environment value and returns the Python integer
     equivalent or default.
     """
-    return builtins.int(get(val, default).strip())
+    value = get(name, default)
+    if isinstance(value, builtins.str):
+        value = value.strip()
+    return builtins.int(value)
