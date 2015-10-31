@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 from setuptools import setup, find_packages
+from envitro import __VERSION__
 
 setup(
     name = 'envitro',
-    version = '0.1.0',
+    version = __VERSION__,
     packages = find_packages(exclude=['tests']),
     description = 'A module to read environment variables.',
     license = 'Apache 2',
