@@ -15,6 +15,12 @@ except ImportError:
 from os import environ
 from .utils import strtobool
 
+def isset(name):
+    """
+    Return a boolean if the environment variable is set or not.
+    """
+    return True if environ.get(name) else False
+
 def set(name, value):
     """
     Set the raw env value.

@@ -9,6 +9,14 @@ import envitro
 class TestCore(unittest.TestCase):
 
     # test setter/getter
+    def test_isset(self):
+        os.environ['TEST_ISSET_TRUE'] = 'setvar'
+        self.assertTrue(envitro.isset('TEST_ISSET_TRUE'))
+
+        if 'TEST_ISSET_FALSE' in os.environ:
+            del os.environ['TEST_ISSET_FALSE']
+        self.assertFalse(envitro.isset('TEST_ISSET_FALSE'))
+
     def test_set(self):
         envitro.set('TEST_SET', 'setvar')
         self.assertEqual(os.environ['TEST_SET'], 'setvar')

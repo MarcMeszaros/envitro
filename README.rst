@@ -34,3 +34,6 @@ Usage
     envitro.set("RAW_STRING", " raw_string ")
     envitro.get("RAW_STRING") # returns " raw_string "
     envitro.get("MISSING_RAW_STRING", " defaultval ") # returns " defaultval "
+
+    # utility functions
+    envitro.isset("MAYBE_SET_VARIABLE") # return True/False
