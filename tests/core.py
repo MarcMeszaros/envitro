@@ -22,6 +22,10 @@ class TestCore(unittest.TestCase):
         self.assertEqual(os.environ['TEST_SET'], 'setvar')
         envitro.set('TEST_SET_SPACES', '  spacesvar  ')
         self.assertEqual(os.environ['TEST_SET_SPACES'], '  spacesvar  ')
+        envitro.set('TEST_SET_INT', 123)
+        self.assertEqual(os.environ['TEST_SET_INT'], '123')
+        envitro.set('TEST_SET_BOOL', True)
+        self.assertEqual(os.environ['TEST_SET_BOOL'], 'True')
 
     def test_set_clear(self):
         os.environ['TEST_ALREADY_SET'] = 'myvar'

@@ -26,7 +26,7 @@ def set(name, value):
     Set the raw env value. A None value clears the environment variable.
     """
     if value is not None:
-        environ[name] = value
+        environ[name] = builtins.str(value)
     elif environ.get(name):
         del environ[name]
 
