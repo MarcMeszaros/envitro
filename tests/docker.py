@@ -2,7 +2,6 @@
 """Unit tests for the envitro module."""
 
 import unittest
-import os
 import envitro
 import envitro.docker
 
@@ -42,7 +41,7 @@ class TestDocker(unittest.TestCase):
         envitro.set('DB_PORT', 'tcp://172.17.0.82:5432')
         self.assertEqual(envitro.docker.port('DB'), 5432)
 
-    def test_protocol_required(self):
+    def test_port_required(self):
         if envitro.isset('DB_REQUIRED_PORT'):
             del os.environ['DB_REQUIRED_PORT']
         with self.assertRaises(KeyError):
