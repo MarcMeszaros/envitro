@@ -33,7 +33,7 @@ def str(val, default=None):
     """
     Gets a string based environment value or default.
     """
-    return builtins.str(_get_env_value(val, default))
+    return builtins.str(_get_env_value(val, default).strip())
 
 
 def bool(val, default=None):
@@ -45,7 +45,7 @@ def bool(val, default=None):
     if isinstance(value, builtins.bool):
         return value
     else:
-        return builtins.bool(strtobool(builtins.str(value).lower()))
+        return builtins.bool(strtobool(builtins.str(value).lower().strip()))
 
 
 def int(val, default=None):
@@ -53,4 +53,4 @@ def int(val, default=None):
     Gets a string based environment value and returns the Python integer
     equivalent or default.
     """
-    return builtins.int(_get_env_value(val, default))
+    return builtins.int(_get_env_value(val, default).strip())
