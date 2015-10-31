@@ -2,8 +2,10 @@
 """Docker specific environment variable reading.
 """
 
+# Silence "builtin with same name" messages.
+# pylint: disable-msg=W0622
 import re
-from os import environ
+from .core import str
 
 def _split_docker_link(alias_name):
     """
@@ -13,10 +15,13 @@ def _split_docker_link(alias_name):
     ex: _split_docker_link('DB') -> ['tcp', '172.17.0.82', '8080']
     """
     sanitized_name = alias_name.strip().upper()
-    return filter(None, re.split(r':|//', environ.get('{0}_PORT'.format(sanitized_name), '')))
+    split_list = re.split(r':|//', str('{0}_PORT'.format(sanitized_name)))
+    # filter out empty '' vals from the list with filter and
+    # cast to list (required for python3)
+    return list(filter(None, split_list))
 
 
-def protocol(alias_name, default='tcp'):
+def protocol(alias_name, default=None):
     """
     Get the protocol from the docker link alias or return the default.
 
@@ -25,11 +30,14 @@ def protocol(alias_name, default='tcp'):
     """
     try:
         return _split_docker_link(alias_name)[0]
-    except Exception as err:
-        return default
+    except KeyError as err:
+        if default:
+            return default
+        else:
+            raise err
 
 
-def host(alias_name, default='127.0.0.1'):
+def host(alias_name, default=None):
     """
     Get the host from the docker link alias or return the default.
 
@@ -38,11 +46,14 @@ def host(alias_name, default='127.0.0.1'):
     """
     try:
         return _split_docker_link(alias_name)[1]
-    except Exception as err:
-        return default
+    except KeyError as err:
+        if default:
+            return default
+        else:
+            raise err
 
 
-def port(alias_name, default=0):
+def port(alias_name, default=None):
     """
     Get the port from the docker link alias or return the default.
 
@@ -51,5 +62,8 @@ def port(alias_name, default=0):
     """
     try:
         return int(_split_docker_link(alias_name)[2])
-    except Exception as err:
-        return default
+    except KeyError as err:
+        if default:
+            return default
+        else:
+            raise err
