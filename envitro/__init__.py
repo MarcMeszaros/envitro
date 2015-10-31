@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-__VERSION__ = '0.1.0'
+__VERSION__ = '0.2.0'
 
 # Silence "builtin with same name" messages.
 # pylint: disable-msg=W0622
