@@ -15,8 +15,13 @@ except ImportError:
 from os import environ
 from .utils import strtobool
 
+def set(name, value):
+    """
+    Set the raw env value.
+    """
+    environ[name] = value
 
-def _get_env_value(val, default):
+def get(val, default=None):
     """
     Get the raw env value, use the default, or throw an exception
     if both the raw value and default are null.
@@ -33,7 +38,7 @@ def str(val, default=None):
     """
     Gets a string based environment value or default.
     """
-    return builtins.str(_get_env_value(val, default).strip())
+    return builtins.str(get(val, default).strip())
 
 
 def bool(val, default=None):
@@ -41,7 +46,7 @@ def bool(val, default=None):
     Gets a string based environment value and returns the Python boolean
     equivalent or default.
     """
-    value = _get_env_value(val, default)
+    value = get(val, default)
     if isinstance(value, builtins.bool):
         return value
     else:
@@ -53,4 +58,4 @@ def int(val, default=None):
     Gets a string based environment value and returns the Python integer
     equivalent or default.
     """
-    return builtins.int(_get_env_value(val, default).strip())
+    return builtins.int(get(val, default).strip())

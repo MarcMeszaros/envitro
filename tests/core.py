@@ -8,6 +8,27 @@ import envitro
 
 class TestCore(unittest.TestCase):
 
+    # test setter/getter
+    def test_set(self):
+        envitro.set('TEST_SET', 'setvar')
+        self.assertEqual(os.environ['TEST_SET'], 'setvar')
+        envitro.set('TEST_SET_SPACES', '  spacesvar  ')
+        self.assertEqual(os.environ['TEST_SET_SPACES'], '  spacesvar  ')
+
+    def test_get_default(self):
+        if 'TEST_DEFAULT_GET' in os.environ:
+            del os.environ['TEST_DEFAULT_GET']
+        self.assertEqual(envitro.get('TEST_DEFAULT_GET', 'defaultval'), 'defaultval')
+
+    def test_invalid_get(self):
+        if 'TEST_INVALID_GET' in os.environ:
+            del os.environ['TEST_INVALID_GET']
+        self.assertRaises(KeyError, lambda: envitro.get('TEST_INVALID_GET'))
+
+    def test_get(self):
+        os.environ['TEST_GET'] = 'getvar'
+        self.assertEqual(envitro.get('TEST_GET'), 'getvar')
+
     # helper testing functions
     def assert_get_set_bool(self, value, expected_value):
         os.environ['TEST_BOOL'] = value
@@ -54,5 +75,5 @@ class TestCore(unittest.TestCase):
         self.assertRaises(KeyError, lambda: envitro.str('DOES_NOT_EXIST'))
 
     def test_invalid_bool(self):
-        os.environ['INVALID_BOOL'] = 'nope'
+        envitro.set('INVALID_BOOL', 'nope')
         self.assertRaises(ValueError, lambda: envitro.bool('INVALID_BOOL'))
