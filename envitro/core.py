@@ -23,9 +23,12 @@ def isset(name):
 
 def set(name, value):
     """
-    Set the raw env value.
+    Set the raw env value. A None value clears the environment variable.
     """
-    environ[name] = value
+    if value is not None:
+        environ[name] = value
+    else:
+        del environ[name]
 
 def get(val, default=None):
     """

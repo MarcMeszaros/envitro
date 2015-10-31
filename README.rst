@@ -31,6 +31,7 @@ Usage
     str_default = envitro.str("STRING_NOT_FOUND", "my_default")
 
     # get and set raw environment variables
+    envitro.set("EXISTING_VAR", None) # clear the environment variable
     envitro.set("RAW_STRING", " raw_string ")
     envitro.get("RAW_STRING") # returns " raw_string "
     envitro.get("MISSING_RAW_STRING", " defaultval ") # returns " defaultval "

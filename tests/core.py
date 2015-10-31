@@ -23,6 +23,11 @@ class TestCore(unittest.TestCase):
         envitro.set('TEST_SET_SPACES', '  spacesvar  ')
         self.assertEqual(os.environ['TEST_SET_SPACES'], '  spacesvar  ')
 
+    def test_set_clear(self):
+        os.environ['TEST_ALREADY_SET'] = 'myvar'
+        envitro.set('TEST_ALREADY_SET', None)
+        self.assertEqual(os.environ.get('TEST_ALREADY_SET'), None)
+
     def test_get_default(self):
         if 'TEST_DEFAULT_GET' in os.environ:
             del os.environ['TEST_DEFAULT_GET']
