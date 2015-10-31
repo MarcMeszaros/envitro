@@ -28,6 +28,11 @@ class TestCore(unittest.TestCase):
         envitro.set('TEST_ALREADY_SET', None)
         self.assertEqual(os.environ.get('TEST_ALREADY_SET'), None)
 
+        if 'TEST_ALREADY_SET_MISSING' in os.environ:
+            del os.environ['TEST_ALREADY_SET_MISSING']
+        envitro.set('TEST_ALREADY_SET_MISSING', None)
+        self.assertEqual(os.environ.get('TEST_ALREADY_SET_MISSING'), None)
+
     def test_get_default(self):
         if 'TEST_DEFAULT_GET' in os.environ:
             del os.environ['TEST_DEFAULT_GET']
@@ -85,8 +90,10 @@ class TestCore(unittest.TestCase):
     def test_invalid(self):
         if 'DOES_NOT_EXIST' in os.environ:
             del os.environ['DOES_NOT_EXIST']
-        self.assertRaises(KeyError, lambda: envitro.str('DOES_NOT_EXIST'))
+        with self.assertRaises(KeyError):
+            envitro.str('DOES_NOT_EXIST')
 
     def test_invalid_bool(self):
         envitro.set('INVALID_BOOL', 'nope')
-        self.assertRaises(ValueError, lambda: envitro.bool('INVALID_BOOL'))
+        with self.assertRaises(ValueError):
+            envitro.bool('INVALID_BOOL')

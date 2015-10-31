@@ -27,7 +27,7 @@ def set(name, value):
     """
     if value is not None:
         environ[name] = value
-    else:
+    elif environ.get(name):
         del environ[name]
 
 def get(val, default=None):
