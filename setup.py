@@ -1,6 +1,19 @@
 # -*- coding: utf-8 -*-
 from setuptools import setup, find_packages
+from setuptools.command.test import test as TestCommand
+
 from envitro import __VERSION__
+
+class ToxTest(TestCommand):
+    def finalize_options(self):
+        TestCommand.finalize_options(self)
+        self.test_args = []
+        self.test_suite = True
+
+    def run_tests(self):
+        import tox
+        errcode = tox.cmdline(args=self.test_args)
+        sys.exit(errcode)
 
 setup(
     name = 'envitro',
@@ -24,5 +37,6 @@ setup(
         'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
     ],
-    test_suite = 'envitro.tests',
+    tests_require = ['tox'],
+    cmdclass={'test': ToxTest},
 )
