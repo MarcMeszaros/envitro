@@ -16,14 +16,21 @@ from os import environ
 from .utils import strtobool
 
 def isset(name):
-    """
-    Return a boolean if the environment variable is set or not.
+    """Return a boolean if the environment variable is set or not.
+
+    Args:
+        name: The environment variable name
     """
     return True if environ.get(name) else False
 
 def set(name, value):
-    """
-    Set the raw env value. A None value clears the environment variable.
+    """Set a raw env value.
+
+    A ``None`` value clears the environment variable.
+
+    Args:
+        name: The environment variable name
+        value: The value to set
     """
     if value is not None:
         environ[name] = builtins.str(value)
@@ -31,9 +38,14 @@ def set(name, value):
         del environ[name]
 
 def get(name, default=None):
-    """
-    Get the raw env value, use the default, or throw an exception
-    if both the raw value and default are null.
+    """Get the raw env value.
+
+    Get the raw environment variable or use the default. If the value is not
+    found and no default is set throw an exception.
+
+    Args:
+        name: The environment variable name
+        default: The default value to use if no environment variable is found
     """
     raw_value = environ.get(name)
     if raw_value or raw_value == '':
@@ -43,17 +55,23 @@ def get(name, default=None):
     else:
         raise KeyError('Set the "{0}" environment variable'.format(name))
 
+
 def str(name, default=None):
-    """
-    Gets a string based environment value or default.
+    """Get a string based environment value or the default.
+
+    Args:
+        name: The environment variable name
+        default: The default value to use if no environment variable is found
     """
     return builtins.str(get(name, default)).strip()
 
 
 def bool(name, default=None):
-    """
-    Gets a string based environment value and returns the Python boolean
-    equivalent or default.
+    """Get a boolean based environment value or the default.
+
+    Args:
+        name: The environment variable name
+        default: The default value to use if no environment variable is found
     """
     value = get(name, default)
     if isinstance(value, builtins.bool):
@@ -66,9 +84,11 @@ def bool(name, default=None):
 
 
 def int(name, default=None):
-    """
-    Gets a string based environment value and returns the Python integer
-    equivalent or default.
+    """Get a string environment value or the default.
+
+    Args:
+        name: The environment variable name
+        default: The default value to use if no environment variable is found
     """
     value = get(name, default)
     if isinstance(value, builtins.str):

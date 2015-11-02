@@ -22,11 +22,17 @@ def _split_docker_link(alias_name):
 
 
 def protocol(alias_name, default=None):
-    """
-    Get the protocol from the docker link alias or return the default.
+    """Get the protocol from the docker link alias or return the default.
 
-    ex: (docker --link postgres:db) -> DB_PORT=tcp://172.17.0.82:5432
-    protocol('DB') -> tcp
+    Args:
+        alias_name: The docker link alias
+
+    Examples:
+        Assuming a Docker link was created with ``docker --link postgres:db``
+        and the resulting environment variable is ``DB_PORT=tcp://172.17.0.82:5432``.
+
+        >>> envitro.docker.protocol('DB')
+        tcp
     """
     try:
         return _split_docker_link(alias_name)[0]
@@ -38,11 +44,17 @@ def protocol(alias_name, default=None):
 
 
 def host(alias_name, default=None):
-    """
-    Get the host from the docker link alias or return the default.
+    """Get the host from the docker link alias or return the default.
 
-    ex: (docker --link postgres:db) -> DB_PORT=tcp://172.17.0.82:5432
-    host('DB') -> 172.17.0.82
+    Args:
+        alias_name: The docker link alias
+
+    Examples:
+        Assuming a Docker link was created with ``docker --link postgres:db``
+        and the resulting environment variable is ``DB_PORT=tcp://172.17.0.82:5432``.
+
+        >>> envitro.docker.host('DB')
+        172.17.0.82
     """
     try:
         return _split_docker_link(alias_name)[1]
@@ -54,11 +66,17 @@ def host(alias_name, default=None):
 
 
 def port(alias_name, default=None):
-    """
-    Get the port from the docker link alias or return the default.
+    """Get the port from the docker link alias or return the default.
 
-    ex: (docker --link postgres:db) -> DB_PORT=tcp://172.17.0.82:5432
-    port('DB') -> 5432
+    Args:
+        alias_name: The docker link alias
+
+    Examples:
+        Assuming a Docker link was created with ``docker --link postgres:db``
+        and the resulting environment variable is ``DB_PORT=tcp://172.17.0.82:5432``.
+
+        >>> envitro.docker.port('DB')
+        5432
     """
     try:
         return int(_split_docker_link(alias_name)[2])
