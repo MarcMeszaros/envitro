@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from setuptools import setup, find_packages
+from setuptools import setup
 from setuptools.command.test import test as TestCommand
 
 from envitro import __VERSION__
@@ -18,7 +18,7 @@ class ToxTest(TestCommand):
 setup(
     name = 'envitro',
     version = __VERSION__,
-    packages = find_packages(exclude=['tests']),
+    packages = ['envitro'],
     description = 'A module to read environment variables.',
     license = 'Apache 2',
     author = 'Marc Meszaros',
@@ -38,5 +38,7 @@ setup(
         'Programming Language :: Python :: 3.5',
     ],
     tests_require = ['tox'],
-    cmdclass={'test': ToxTest},
+    cmdclass = {
+        'test': ToxTest
+    },
 )
