@@ -19,7 +19,7 @@ setup(
     name = 'envitro',
     version = __VERSION__,
     packages = ['envitro'],
-    description = 'A module to read environment variables.',
+    description = 'A module for reading and writing environment variables.',
     license = 'Apache 2',
     author = 'Marc Meszaros',
     author_email = 'me@marcmeszaros.com',

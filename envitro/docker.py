@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 """Docker specific environment variable reading.
+
+A set of functions to read environment variables for docker links.
 """
 
 # Silence "builtin with same name" messages.
