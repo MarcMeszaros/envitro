@@ -108,6 +108,40 @@ class TestCore(unittest.TestCase):
         with self.assertRaises(ValueError):
             envitro.bool('INVALID_BOOL')
 
+    def test_list(self):
+        os.environ['TEST_LIST'] = 'item1,item2,item3'
+        self.assertEqual(envitro.list('TEST_LIST'), ['item1', 'item2', 'item3'])
+        os.environ['TEST_LIST'] = 'item1,item2'
+        self.assertEqual(envitro.list('TEST_LIST'), ['item1', 'item2'])
+        os.environ['TEST_LIST'] = 'item1'
+        self.assertEqual(envitro.list('TEST_LIST'), ['item1'])
+        os.environ['TEST_LIST'] = 'item1,'
+        self.assertEqual(envitro.list('TEST_LIST'), ['item1'])
+        os.environ['TEST_LIST'] = ',item1,'
+        self.assertEqual(envitro.list('TEST_LIST'), ['item1'])
+
+    def test_list_required(self):
+        os.environ['TEST_LIST_REQUIRED'] = ''
+        with self.assertRaises(ValueError):
+            envitro.list('TEST_LIST_REQUIRED')
+
+    def test_list_spaces(self):
+        os.environ['TEST_LIST_SPACES'] = '  item1 , item2 , item3  '
+        self.assertEqual(envitro.list('TEST_LIST_SPACES'), ['item1', 'item2', 'item3'])
+        os.environ['TEST_LIST_SPACES'] = ' , item1 , item2 , item3 , , ,, '
+        self.assertEqual(envitro.list('TEST_LIST_SPACES'), ['item1', 'item2', 'item3'])
+
+    def test_default_list(self):
+        if 'DOES_NOT_EXIST' in os.environ:
+            del os.environ['DOES_NOT_EXIST']
+        self.assertEqual(envitro.list('DOES_NOT_EXIST', ['item1']), ['item1'])
+        self.assertEqual(envitro.list('DOES_NOT_EXIST', ['item1', 'item2']), ['item1', 'item2'])
+        self.assertEqual(envitro.list('DOES_NOT_EXIST', 'item1,item2'), ['item1', 'item2'])
+
+    def test_list_separator(self):
+        os.environ['TEST_LIST_SEPARATOR'] = 'item1;item2;item3'
+        self.assertEqual(envitro.list('TEST_LIST_SEPARATOR', separator=';'), ['item1', 'item2', 'item3'])
+
     def test_nested_default(self):
         self.assertEqual(envitro.int('TEST_NOPE_INT', envitro.str('TEST_NOPE_STR', '123')), 123)
         self.assertEqual(envitro.str('TEST_NOPE_STR', envitro.int('TEST_NOPE_INT', 123)), '123')

@@ -94,3 +94,27 @@ def int(name, default=None):
     if isinstance(value, builtins.str):
         value = value.strip()
     return builtins.int(value)
+
+
+def list(name, default=None, separator=','):
+    """Get a list of strings or the default.
+
+    The individual list elements are whitespace-stripped.
+
+    Args:
+        name: The environment variable name
+        default: The default value to use if no environment variable is found
+        separator: The list item separator character or pattern
+    """
+    value = get(name, default)
+    if isinstance(value, builtins.list):
+        return value
+    elif isinstance(value, builtins.str):
+        value_list = [item.strip() for item in value.split(separator)]
+        value_list_sanitized = builtins.list(filter(None, value_list))
+        if len(value_list_sanitized) > 0:
+            return value_list_sanitized
+        else:
+            raise ValueError('Invalid list variable.')
+    else:
+        return [builtins.str(value)]

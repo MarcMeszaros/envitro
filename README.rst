@@ -36,5 +36,11 @@ Usage
     envitro.get("RAW_STRING") # returns " raw_string "
     envitro.get("MISSING_RAW_STRING", " defaultval ") # returns " defaultval "
 
+    # lists
+    os.environ["LIST_ENV"] = "item1,item2,item3"
+    list_required = envitro.("LIST_ENV") # returns ["item1", "item2", "item3"]
+    os.environ["LIST_ENV2"] = "item1;item2;item3"
+    list_required2 = envitro.("LIST_ENV2", separator=";") # returns ["item1", "item2", "item3"]
+
     # utility functions
     envitro.isset("MAYBE_SET_VARIABLE") # return True/False
