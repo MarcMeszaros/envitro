@@ -2,7 +2,7 @@
 from setuptools import setup
 from setuptools.command.test import test as TestCommand
 
-from envitro import __VERSION__
+from envitro import __version__
 
 class ToxTest(TestCommand):
     def finalize_options(self):
@@ -17,7 +17,7 @@ class ToxTest(TestCommand):
 
 setup(
     name = 'envitro',
-    version = __VERSION__,
+    version = __version__,
     packages = ['envitro'],
     description = 'A module for reading and writing environment variables.',
     license = 'Apache 2',
