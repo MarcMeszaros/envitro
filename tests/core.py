@@ -64,6 +64,10 @@ class TestCore(unittest.TestCase):
         os.environ['TEST_INT'] = value
         self.assertEqual(envitro.int('TEST_INT'), expected_value)
 
+    def assert_get_set_float(self, value, expected_value):
+        os.environ['TEST_FLOAT'] = value
+        self.assertEqual(envitro.float('TEST_FLOAT'), expected_value)
+
     # actual tests
     def test_str(self):
         self.assert_get_set_str('Hello World', 'Hello World')
@@ -74,6 +78,11 @@ class TestCore(unittest.TestCase):
     def test_int(self):
         self.assert_get_set_int('1234567', 1234567)
         self.assert_get_set_int('  1234567  ', 1234567)
+
+    def test_float(self):
+        self.assert_get_set_float('123.45670', 123.4567)
+        self.assert_get_set_float('  12345.67  ', 12345.67)
+        self.assert_get_set_float('  0012345.67  ', 12345.67)
 
     def test_bool(self):
         self.assert_get_set_bool('yes', True)

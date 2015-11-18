@@ -19,6 +19,7 @@ Usage
     # fails when environment variables are missing
     bool_required = envitro.bool("BOOL_ENV")
     int_required = envitro.int("INTEGER_ENV")
+    float_required = envitro.float("FLOAT_ENV")
     str_required = envitro.str("STRING_ENV")
 
     # basic sanitizing
@@ -28,6 +29,7 @@ Usage
     # falls back to defaults
     bool_default = envitro.bool("BOOL_NOT_FOUND", False)
     int_default = envitro.int("INTEGER_NOT_FOUND", 42)
+    float_default = envitro.float("FLOAT_NOT_FOUND", 42.44)
     str_default = envitro.str("STRING_NOT_FOUND", "my_default")
 
     # get and set raw environment variables

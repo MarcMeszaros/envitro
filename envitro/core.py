@@ -96,6 +96,19 @@ def int(name, default=None):
     return builtins.int(value)
 
 
+def float(name, default=None):
+    """Get a string environment value or the default.
+
+    Args:
+        name: The environment variable name
+        default: The default value to use if no environment variable is found
+    """
+    value = get(name, default)
+    if isinstance(value, builtins.str):
+        value = value.strip()
+    return builtins.float(value)
+
+
 def list(name, default=None, separator=','):
     """Get a list of strings or the default.
 
