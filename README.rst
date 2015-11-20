@@ -1,10 +1,10 @@
 envitro
 =======
 
-A module for reading configuration values from the OS environment variables.
+A module for reading values from OS environment variables.
 
-Compared to using straight os.getenv() this module provides convenience functions,
-for parsing basic datatypes. It also allows to specify optional default values if
+Compared to using os.getenv(), this module provides convenience functions,
+for parsing basic datatypes. It also allows specifying optional default values if
 the environment variable does not exist. Basic environment variable parsing and
 sanitizing is also performed.
 
