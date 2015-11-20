@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 """Unit tests for the envitro module."""
 
+import os
 import unittest
 import envitro
 import envitro.docker
