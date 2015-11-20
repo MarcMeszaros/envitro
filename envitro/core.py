@@ -37,7 +37,7 @@ def set(name, value):
     elif environ.get(name):
         del environ[name]
 
-def get(name, default=None):
+def get(name, default=None, allow_none=False):
     """Get the raw env value.
 
     Get the raw environment variable or use the default. If the value is not
@@ -50,7 +50,7 @@ def get(name, default=None):
     raw_value = environ.get(name)
     if raw_value or raw_value == '':
         return raw_value
-    elif default is not None:
+    elif default is not None or allow_none:
         return default
     else:
         raise KeyError('Set the "{0}" environment variable'.format(name))

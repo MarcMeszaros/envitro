@@ -8,6 +8,18 @@ import envitro.docker
 
 class TestDocker(unittest.TestCase):
 
+    def test_isset(self):
+        envitro.set('DB_PORT', 'tcp://172.17.0.82:5432')
+        self.assertTrue(envitro.docker.isset('DB'))
+        envitro.set('NODB_PORT', None)
+        self.assertFalse(envitro.docker.isset('NODB'))
+
+    def test_get(self):
+        envitro.set('DB_PORT', 'tcp://172.17.0.82:5432')
+        self.assertEqual(envitro.docker.get('DB'), 'tcp://172.17.0.82:5432')
+        envitro.set('NODB_PORT', None)
+        self.assertEqual(envitro.docker.get('NODB'), None)
+
     def test_protocol(self):
         envitro.set('DB_PORT', 'tcp://172.17.0.82:5432')
         self.assertEqual(envitro.docker.protocol('DB'), 'tcp')
