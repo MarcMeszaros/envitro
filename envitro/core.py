@@ -5,8 +5,9 @@ A set of functions to read environment variables and cast them into the correct
 python datatypes. Also performs basic error handling.
 """
 
-# Silence "builtin with same name" messages.
-# pylint: disable-msg=W0622
+# Silence some pylint messages.
+# pylint: disable=W0622,W0141
+
 try:
     import builtins
 except ImportError:
@@ -46,6 +47,7 @@ def get(name, default=None, allow_none=False):
     Args:
         name: The environment variable name
         default: The default value to use if no environment variable is found
+        allow_none: If the return value can be `None` (i.e. optional)
     """
     raw_value = environ.get(name)
     if raw_value or raw_value == '':
@@ -56,24 +58,26 @@ def get(name, default=None, allow_none=False):
         raise KeyError('Set the "{0}" environment variable'.format(name))
 
 
-def str(name, default=None):
+def str(name, default=None, allow_none=False):
     """Get a string based environment value or the default.
 
     Args:
         name: The environment variable name
         default: The default value to use if no environment variable is found
+        allow_none: If the return value can be `None` (i.e. optional)
     """
-    return builtins.str(get(name, default)).strip()
+    return builtins.str(get(name, default, allow_none)).strip()
 
 
-def bool(name, default=None):
+def bool(name, default=None, allow_none=False):
     """Get a boolean based environment value or the default.
 
     Args:
         name: The environment variable name
         default: The default value to use if no environment variable is found
+        allow_none: If the return value can be `None` (i.e. optional)
     """
-    value = get(name, default)
+    value = get(name, default, allow_none)
     if isinstance(value, builtins.bool):
         return value
     elif isinstance(value, builtins.int):
@@ -83,33 +87,35 @@ def bool(name, default=None):
         return strtobool(value_str)
 
 
-def int(name, default=None):
+def int(name, default=None, allow_none=False):
     """Get a string environment value or the default.
 
     Args:
         name: The environment variable name
         default: The default value to use if no environment variable is found
+        allow_none: If the return value can be `None` (i.e. optional)
     """
-    value = get(name, default)
+    value = get(name, default, allow_none)
     if isinstance(value, builtins.str):
         value = value.strip()
     return builtins.int(value)
 
 
-def float(name, default=None):
+def float(name, default=None, allow_none=False):
     """Get a string environment value or the default.
 
     Args:
         name: The environment variable name
         default: The default value to use if no environment variable is found
+        allow_none: If the return value can be `None` (i.e. optional)
     """
-    value = get(name, default)
+    value = get(name, default, allow_none)
     if isinstance(value, builtins.str):
         value = value.strip()
     return builtins.float(value)
 
 
-def list(name, default=None, separator=','):
+def list(name, default=None, allow_none=False, separator=','):
     """Get a list of strings or the default.
 
     The individual list elements are whitespace-stripped.
@@ -117,9 +123,10 @@ def list(name, default=None, separator=','):
     Args:
         name: The environment variable name
         default: The default value to use if no environment variable is found
+        allow_none: If the return value can be `None` (i.e. optional)
         separator: The list item separator character or pattern
     """
-    value = get(name, default)
+    value = get(name, default, allow_none)
     if isinstance(value, builtins.list):
         return value
     elif isinstance(value, builtins.str):
@@ -129,5 +136,7 @@ def list(name, default=None, separator=','):
             return value_list_sanitized
         else:
             raise ValueError('Invalid list variable.')
+    elif value is None and allow_none:
+        return None
     else:
         return [builtins.str(value)]

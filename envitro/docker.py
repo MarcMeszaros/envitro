@@ -5,9 +5,11 @@ A set of functions to read environment variables for docker links.
 """
 from __future__ import absolute_import
 
-# Silence "builtin with same name" messages.
-# pylint: disable-msg=W0622
+# Silence some pylint messages.
+# pylint: disable=W0622,W0141,W0406
+
 import re
+
 from . import core
 
 def _split_docker_link(alias_name):
@@ -27,25 +29,29 @@ def isset(alias_name):
     """Return a boolean if the docker link is set or not.
 
     Args:
-        name: The link alias name
+        alias_name: The link alias name
     """
     return core.isset('{0}_PORT'.format(alias_name))
 
-def get(alias_name):
+def get(alias_name, allow_none=False):
     """Get the raw docker link value.
 
     Get the raw environment variable for the docker link
 
     Args:
         alias_name: The environment variable name
+        default: The default value if the link isn't available
+        allow_none: If the return value can be `None` (i.e. optional)
     """
-    return core.get('{0}_PORT'.format(alias_name), default=None, allow_none=True)
+    return core.get('{0}_PORT'.format(alias_name), default=None, allow_none=allow_none)
 
-def protocol(alias_name, default=None):
+def protocol(alias_name, default=None, allow_none=False):
     """Get the protocol from the docker link alias or return the default.
 
     Args:
         alias_name: The docker link alias
+        default: The default value if the link isn't available
+        allow_none: If the return value can be `None` (i.e. optional)
 
     Examples:
         Assuming a Docker link was created with ``docker --link postgres:db``
@@ -57,17 +63,19 @@ def protocol(alias_name, default=None):
     try:
         return _split_docker_link(alias_name)[0]
     except KeyError as err:
-        if default:
+        if default or allow_none:
             return default
         else:
             raise err
 
 
-def host(alias_name, default=None):
+def host(alias_name, default=None, allow_none=False):
     """Get the host from the docker link alias or return the default.
 
     Args:
         alias_name: The docker link alias
+        default: The default value if the link isn't available
+        allow_none: If the return value can be `None` (i.e. optional)
 
     Examples:
         Assuming a Docker link was created with ``docker --link postgres:db``
@@ -79,17 +87,19 @@ def host(alias_name, default=None):
     try:
         return _split_docker_link(alias_name)[1]
     except KeyError as err:
-        if default:
+        if default or allow_none:
             return default
         else:
             raise err
 
 
-def port(alias_name, default=None):
+def port(alias_name, default=None, allow_none=False):
     """Get the port from the docker link alias or return the default.
 
     Args:
         alias_name: The docker link alias
+        default: The default value if the link isn't available
+        allow_none: If the return value can be `None` (i.e. optional)
 
     Examples:
         Assuming a Docker link was created with ``docker --link postgres:db``
@@ -101,7 +111,7 @@ def port(alias_name, default=None):
     try:
         return int(_split_docker_link(alias_name)[2])
     except KeyError as err:
-        if default:
+        if default or allow_none:
             return default
         else:
             raise err

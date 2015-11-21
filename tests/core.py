@@ -1,8 +1,12 @@
 # -*- coding: utf-8 -*-
 """Unit tests for the envitro module."""
 
+# Silence some pylint messages.
+# pylint: disable=C0111,R0904
+
 import unittest
 import os
+
 import envitro
 
 
@@ -41,6 +45,16 @@ class TestCore(unittest.TestCase):
         if 'TEST_DEFAULT_GET' in os.environ:
             del os.environ['TEST_DEFAULT_GET']
         self.assertEqual(envitro.get('TEST_DEFAULT_GET', 'defaultval'), 'defaultval')
+
+    def test_get_none(self):
+        if 'TEST_DEFAULT_GET_NONE' in os.environ:
+            del os.environ['TEST_DEFAULT_GET_NONE']
+        self.assertEqual(envitro.get('TEST_DEFAULT_GET_NONE', allow_none=True), None)
+
+        if 'TEST_DEFAULT_GET_NONE_DEFAULT' in os.environ:
+            del os.environ['TEST_DEFAULT_GET_NONE_DEFAULT']
+        self.assertEqual(
+            envitro.get('TEST_DEFAULT_GET_NONE_DEFAULT', default='defaultval', allow_none=True), 'defaultval')
 
     def test_invalid_get(self):
         if 'TEST_INVALID_GET' in os.environ:
