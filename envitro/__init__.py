@@ -4,4 +4,5 @@ __version__ = '0.3.0'
 # Silence some pylint messages.
 # pylint: disable=W0622,W0401
 
+from . import decorators
 from .core import *

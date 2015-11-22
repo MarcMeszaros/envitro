@@ -46,3 +46,24 @@ Usage
 
     # utility functions
     envitro.isset("MAYBE_SET_VARIABLE") # return True/False
+
+
+Decorators
+----------
+
+There are also decorators available to selectively enable or disable functions based on environment
+variables.
+
+.. code-block:: python
+
+    import envitro
+
+    @envitro.decorators.bool('ALLOW_REMOTE')
+    def get_remote(arg1, arg2):
+        return call_remote_service(arg1, arg2)
+
+    envitro.set('ALLOW_REMOTE', 'True')
+    get_remote('hello', 'world') # calls remote service
+
+    envitro.set('ALLOW_REMOTE', 'False')
+    get_remote('hello', 'world') # returns "None"
