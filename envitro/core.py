@@ -14,7 +14,25 @@ except ImportError:
     import __builtin__ as builtins
 
 from os import environ
-from .utils import strtobool
+
+__all__ = [
+    'isset', 'set', 'get', 'int', 'float', 'bool', 'str', 'list'
+]
+
+def strtobool(val):
+    """Convert a string representation of truth to true (1) or false (0).
+
+    True values are 'y', 'yes', 't', 'true', 'on', and '1'; false values
+    are 'n', 'no', 'f', 'false', 'off', '0' and ''.  Raises ValueError if
+    'val' is anything else.
+    """
+    val = val.lower()
+    if val in ('y', 'yes', 't', 'true', 'on', '1'):
+        return 1
+    elif val in ('n', 'no', 'f', 'false', 'off', '0', ''):
+        return 0
+    else:
+        raise ValueError('Invalid truth value: {0}'.format(val))
 
 def isset(name):
     """Return a boolean if the environment variable is set or not.
