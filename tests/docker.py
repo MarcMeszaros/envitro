@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-"""Unit tests for the envitro module."""
 
 # Silence some pylint messages.
 # pylint: disable=C0111

@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
-"""Unit tests for the envitro module."""
 
 # Silence some pylint messages.
-# pylint: disable=C0111,R0904
+# pylint: disable=C0111,C0301,R0904
 
 import unittest
 import os

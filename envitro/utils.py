@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+"""Utility functions that can be used by other modules."""
 
 def strtobool(val):
     """Convert a string representation of truth to true (1) or false (0).
