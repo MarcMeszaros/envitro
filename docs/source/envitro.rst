@@ -10,3 +10,9 @@ docker
 
 .. automodule:: envitro.docker
   :members:
+
+decorators
+----------
+
+.. automodule:: envitro.decorators
+  :members:
