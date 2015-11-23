@@ -58,6 +58,16 @@ variables.
 
     import envitro
 
+    @envitro.decorators.isset('ALLOW_FOO')
+    def foo():
+        return "Hello World"
+
+    envitro.set('ALLOW_FOO', '1')
+    foo() # allowed
+
+    envitro.set('ALLOW_FOO', None)
+    foo() # return "None" and is not executed
+
     @envitro.decorators.bool('ALLOW_REMOTE')
     def get_remote(arg1, arg2):
         return call_remote_service(arg1, arg2)
@@ -66,4 +76,4 @@ variables.
     get_remote('hello', 'world') # calls remote service
 
     envitro.set('ALLOW_REMOTE', 'False')
-    get_remote('hello', 'world') # returns "None"
+    get_remote('hello', 'world') # returns "None" and is not executed
