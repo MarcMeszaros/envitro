@@ -14,6 +14,27 @@ import functools
 
 from . import core
 
+def set(name, value):
+    """Temporarily change or set the environment variable during the execution of a function.
+
+    Args:
+        name: The name of the environment variable
+        value: A value to set for the environment variable
+
+    Returns:
+        The function return value.
+    """
+    def wrapped(func):
+        @functools.wraps(func)
+        def _decorator(*args, **kwargs):
+            existing_env = core.get(name, allow_none=True)
+            core.set(name, value)
+            func_val = func(*args, **kwargs)
+            core.set(name, existing_env)
+            return func_val
+        return _decorator
+    return wrapped
+
 def isset(name):
     """Only execute the function if the variable is set.
 

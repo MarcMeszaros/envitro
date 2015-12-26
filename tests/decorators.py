@@ -11,6 +11,28 @@ import envitro
 
 class TestDecorators(unittest.TestCase):
 
+    def test_set_none(self):
+
+        envitro.set('SET', None)
+        @envitro.decorators.set('SET', 'myval')
+        def myfunc():
+            self.assertEqual(os.environ['SET'], 'myval')
+
+        myfunc()
+        with self.assertRaises(KeyError):
+            os.environ['SET']
+
+    def test_set_string(self):
+
+        os.environ['SET2'] = 'val'
+        @envitro.decorators.set('SET2', 'newval')
+        def myfunc2():
+            self.assertEqual(os.environ['SET2'], 'newval')
+
+        myfunc2()
+        self.assertEqual(os.environ['SET2'], 'val')
+
+
     def test_isset(self):
 
         @envitro.decorators.isset('NOT_SET')
