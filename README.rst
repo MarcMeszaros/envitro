@@ -1,6 +1,9 @@
 envitro
 =======
 
+.. image:: https://travis-ci.org/MarcMeszaros/envitro.svg?branch=master
+    :target: https://travis-ci.org/MarcMeszaros/envitro
+
 A module for reading values from OS environment variables.
 
 Compared to using os.getenv(), this module provides convenience functions,
