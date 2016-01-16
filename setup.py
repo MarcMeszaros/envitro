@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # pylint: disable=C0111
 from __future__ import absolute_import
+import os
 import sys
 
 from setuptools import setup
@@ -19,11 +20,21 @@ class ToxTest(TestCommand):
         errcode = tox.cmdline(args=self.test_args)
         sys.exit(errcode)
 
+# Get the long description from the relevant file
+BASE_DIR = os.path.abspath(os.path.dirname(__file__))
+long_description = None
+try:
+    with open(os.path.join(BASE_DIR, 'README-pypi.rst')) as f:
+        long_description = f.read()
+except IOError:
+    pass
+
 setup(
     name='envitro',
     version=meta.__version__,
     packages=['envitro'],
     description='A module for reading and writing environment variables.',
+    long_description=long_description,
     license='Apache 2',
     author='Marc Meszaros',
     author_email='me@marcmeszaros.com',
