@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
+# pylint: disable=C0111
 from __future__ import absolute_import
+import sys
+
 from setuptools import setup
 from setuptools.command.test import test as TestCommand
 
@@ -17,18 +20,18 @@ class ToxTest(TestCommand):
         sys.exit(errcode)
 
 setup(
-    name = 'envitro',
-    version = meta.__version__,
-    packages = ['envitro'],
-    description = 'A module for reading and writing environment variables.',
-    license = 'Apache 2',
-    author = 'Marc Meszaros',
-    author_email = 'me@marcmeszaros.com',
-    url = 'https://github.com/MarcMeszaros/envitro',
-    keywords = [
+    name='envitro',
+    version=meta.__version__,
+    packages=['envitro'],
+    description='A module for reading and writing environment variables.',
+    license='Apache 2',
+    author='Marc Meszaros',
+    author_email='me@marcmeszaros.com',
+    url='https://github.com/MarcMeszaros/envitro',
+    keywords=[
         'config', 'environment', '12factor'
     ],
-    classifiers = [
+    classifiers=[
         'Development Status :: 4 - Beta',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: Apache Software License',
@@ -39,8 +42,8 @@ setup(
         'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
     ],
-    tests_require = ['tox'],
-    cmdclass = {
+    tests_require=['tox'],
+    cmdclass={
         'test': ToxTest
     },
 )
