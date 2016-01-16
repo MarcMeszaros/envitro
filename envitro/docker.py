@@ -47,7 +47,7 @@ def isset(alias_name):
         if re.compile(r'.+://.+:\d+').match(raw_value):
             return True
         else:
-            warnings.warn('"{0}_PORT={1}" does not look like a docker link.'.format(alias_name, raw_value))
+            warnings.warn('"{0}_PORT={1}" does not look like a docker link.'.format(alias_name, raw_value), stacklevel=2)
             return False
 
     return False
