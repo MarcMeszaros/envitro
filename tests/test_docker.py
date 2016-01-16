@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 # pylint: disable=C0111
-
 import os
 import unittest
+
+import mock
 
 import envitro
 import envitro.docker
@@ -15,6 +16,18 @@ class TestDocker(unittest.TestCase):
         self.assertTrue(envitro.docker.isset('DB'))
         envitro.set('NODB_PORT', None)
         self.assertFalse(envitro.docker.isset('NODB'))
+
+    @mock.patch('warnings.warn')
+    def test_isset_invalid_looking(self, mock_warn):
+        envitro.set('INVALIDDB_PORT', 'nodockerlinkhere')
+        self.assertFalse(envitro.docker.isset('INVALIDDB'))
+        self.assertTrue(mock_warn.called)
+
+    @mock.patch('warnings.warn')
+    def test_isset_invalid_looking_port(self, mock_warn):
+        envitro.set('BADPORT_PORT', 'tcp://172.17.0.82:notaport')
+        self.assertFalse(envitro.docker.isset('BADPORT'))
+        self.assertTrue(mock_warn.called)
 
     def test_get(self):
         envitro.set('DB_PORT', 'tcp://172.17.0.82:5432')

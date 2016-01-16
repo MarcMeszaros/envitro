@@ -1,14 +1,13 @@
 # -*- coding: utf-8 -*-
+# pylint: disable=W0622,W0141,W0406
 """Docker specific environment variable reading.
 
 A set of functions to read environment variables for docker links.
 """
 from __future__ import absolute_import
 
-# Silence some pylint messages.
-# pylint: disable=W0622,W0141,W0406
-
 import re
+import warnings
 
 from . import core
 
@@ -25,14 +24,6 @@ def _split_docker_link(alias_name):
     # cast to list (required for python3)
     return list(filter(None, split_list))
 
-def isset(alias_name):
-    """Return a boolean if the docker link is set or not.
-
-    Args:
-        alias_name: The link alias name
-    """
-    return core.isset('{0}_PORT'.format(alias_name))
-
 def get(alias_name, allow_none=False):
     """Get the raw docker link value.
 
@@ -44,6 +35,22 @@ def get(alias_name, allow_none=False):
         allow_none: If the return value can be `None` (i.e. optional)
     """
     return core.get('{0}_PORT'.format(alias_name), default=None, allow_none=allow_none)
+
+def isset(alias_name):
+    """Return a boolean if the docker link is set or not and is a valid looking docker link value.
+
+    Args:
+        alias_name: The link alias name
+    """
+    raw_value = get(alias_name, allow_none=True)
+    if raw_value:
+        if re.compile(r'.+://.+:\d+').match(raw_value):
+            return True
+        else:
+            warnings.warn('"{0}_PORT={1}" does not look like a docker link.'.format(alias_name, raw_value))
+            return False
+
+    return False
 
 def protocol(alias_name, default=None, allow_none=False):
     """Get the protocol from the docker link alias or return the default.
