@@ -1,6 +1,4 @@
 # -*- coding: utf-8 -*-
-
-# Silence some pylint messages.
 # pylint: disable=C0111
 
 import os
@@ -8,6 +6,7 @@ import unittest
 
 import envitro
 import envitro.docker
+
 
 class TestDocker(unittest.TestCase):
 
