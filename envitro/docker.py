@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# pylint: disable=W0622,W0141,W0406
+# pylint: disable=W0141,W0406,W0622
 """Docker specific environment variable reading.
 
 A set of functions to read environment variables for docker links.

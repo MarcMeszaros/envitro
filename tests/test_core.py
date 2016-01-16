@@ -1,8 +1,5 @@
 # -*- coding: utf-8 -*-
-
-# Silence some pylint messages.
 # pylint: disable=C0111,C0301,R0904
-
 import unittest
 import os
 

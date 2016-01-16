@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
+from __future__ import absolute_import
 from setuptools import setup
 from setuptools.command.test import test as TestCommand
 
-from envitro import __version__
+from envitro import meta
 
 class ToxTest(TestCommand):
     def finalize_options(self):
@@ -17,7 +18,7 @@ class ToxTest(TestCommand):
 
 setup(
     name = 'envitro',
-    version = __version__,
+    version = meta.__version__,
     packages = ['envitro'],
     description = 'A module for reading and writing environment variables.',
     license = 'Apache 2',

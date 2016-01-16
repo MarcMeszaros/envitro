@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# pylint: disable=C0111,W0406,W0622
 """Decorators that modify execution based on environment variables.
 
 A module with decorators that can enable/disable the execution of a function
@@ -6,9 +7,7 @@ based on the existance or value of an environment variable. Mostly intended
 as a syntactically nice way of enabling/disabling automated tests based on
 environment variables.
 """
-
-# Silence some pylint messages.
-# pylint: disable=W0622,W0406,C0111
+from __future__ import absolute_import
 
 import functools
 

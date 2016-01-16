@@ -1,12 +1,10 @@
 # -*- coding: utf-8 -*-
+# pylint: disable=W0141,W0622
 """Read environment variables, with casting and optional defaults.
 
 A set of functions to read environment variables and cast them into the correct
 python datatypes. Also performs basic error handling.
 """
-
-# Silence some pylint messages.
-# pylint: disable=W0622,W0141
 
 try:
     import builtins
