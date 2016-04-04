@@ -34,6 +34,7 @@ def get(alias_name, allow_none=False):
         default: The default value if the link isn't available
         allow_none: If the return value can be `None` (i.e. optional)
     """
+    warnings.warn('Will be removed in v1.0', DeprecationWarning, stacklevel=2)
     return core.get('{0}_PORT'.format(alias_name), default=None, allow_none=allow_none)
 
 def isset(alias_name):
@@ -42,6 +43,7 @@ def isset(alias_name):
     Args:
         alias_name: The link alias name
     """
+    warnings.warn('Will be removed in v1.0', DeprecationWarning, stacklevel=2)
     raw_value = get(alias_name, allow_none=True)
     if raw_value:
         if re.compile(r'.+://.+:\d+').match(raw_value):
@@ -67,6 +69,7 @@ def protocol(alias_name, default=None, allow_none=False):
         >>> envitro.docker.protocol('DB')
         tcp
     """
+    warnings.warn('Will be removed in v1.0', DeprecationWarning, stacklevel=2)
     try:
         return _split_docker_link(alias_name)[0]
     except KeyError as err:
@@ -91,6 +94,7 @@ def host(alias_name, default=None, allow_none=False):
         >>> envitro.docker.host('DB')
         172.17.0.82
     """
+    warnings.warn('Will be removed in v1.0', DeprecationWarning, stacklevel=2)
     try:
         return _split_docker_link(alias_name)[1]
     except KeyError as err:
@@ -115,6 +119,7 @@ def port(alias_name, default=None, allow_none=False):
         >>> envitro.docker.port('DB')
         5432
     """
+    warnings.warn('Will be removed in v1.0', DeprecationWarning, stacklevel=2)
     try:
         return int(_split_docker_link(alias_name)[2])
     except KeyError as err:
