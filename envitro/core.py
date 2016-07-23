@@ -82,7 +82,11 @@ def str(name, default=None, allow_none=False):
         default: The default value to use if no environment variable is found
         allow_none: If the return value can be `None` (i.e. optional)
     """
-    return builtins.str(get(name, default, allow_none)).strip()
+    value = get(name, default, allow_none)
+    if value is None and allow_none:
+        return None
+    else:
+        return builtins.str(value).strip()
 
 
 def bool(name, default=None, allow_none=False):
@@ -98,7 +102,7 @@ def bool(name, default=None, allow_none=False):
         return value
     elif isinstance(value, builtins.int):
         return True if value > 0 else False
-    elif allow_none and value is None:
+    elif value is None and allow_none:
         return None
     else:
         value_str = builtins.str(value).lower().strip()
@@ -116,7 +120,11 @@ def int(name, default=None, allow_none=False):
     value = get(name, default, allow_none)
     if isinstance(value, builtins.str):
         value = value.strip()
-    return builtins.int(value)
+
+    if value is None and allow_none:
+        return None
+    else:
+        return builtins.int(value)
 
 
 def float(name, default=None, allow_none=False):
@@ -130,7 +138,11 @@ def float(name, default=None, allow_none=False):
     value = get(name, default, allow_none)
     if isinstance(value, builtins.str):
         value = value.strip()
-    return builtins.float(value)
+
+    if value is None and allow_none:
+        return None
+    else:
+        return builtins.float(value)
 
 
 def list(name, default=None, allow_none=False, separator=','):

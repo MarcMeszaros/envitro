@@ -88,6 +88,11 @@ class TestCoreStr(unittest.TestCase):
     def test_str_strip_whitespace(self):
         self.assert_get_set_str('  hello  ', 'hello')
 
+    def test_none_str(self):
+        if 'DOES_NOT_EXIST_STR' in os.environ:
+            del os.environ['DOES_NOT_EXIST_STR']
+        self.assertEqual(envitro.str('DOES_NOT_EXIST_STR', allow_none=True), None)
+
 
 class TestCoreBool(unittest.TestCase):
 
@@ -138,6 +143,11 @@ class TestCoreInt(unittest.TestCase):
         self.assert_get_set_int('1234567', 1234567)
         self.assert_get_set_int('  1234567  ', 1234567)
 
+    def test_none_int(self):
+        if 'DOES_NOT_EXIST_INT' in os.environ:
+            del os.environ['DOES_NOT_EXIST_INT']
+        self.assertEqual(envitro.int('DOES_NOT_EXIST_INT', allow_none=True), None)
+
 
 class TestCoreFloat(unittest.TestCase):
 
@@ -149,6 +159,11 @@ class TestCoreFloat(unittest.TestCase):
         self.assert_get_set_float('123.45670', 123.4567)
         self.assert_get_set_float('  12345.67  ', 12345.67)
         self.assert_get_set_float('  0012345.67  ', 12345.67)
+
+    def test_none_float(self):
+        if 'DOES_NOT_EXIST_FLOAT' in os.environ:
+            del os.environ['DOES_NOT_EXIST_FLOAT']
+        self.assertEqual(envitro.float('DOES_NOT_EXIST_FLOAT', allow_none=True), None)
 
 
 class TestCoreList(unittest.TestCase):
@@ -169,6 +184,11 @@ class TestCoreList(unittest.TestCase):
         os.environ['TEST_LIST_REQUIRED'] = ''
         with self.assertRaises(ValueError):
             envitro.list('TEST_LIST_REQUIRED')
+
+    def test_none_list(self):
+        if 'DOES_NOT_EXIST_LIST' in os.environ:
+            del os.environ['DOES_NOT_EXIST_LIST']
+        self.assertEqual(envitro.list('DOES_NOT_EXIST_LIST', allow_none=True), None)
 
     def test_list_spaces(self):
         os.environ['TEST_LIST_SPACES'] = '  item1 , item2 , item3  '
