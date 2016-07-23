@@ -98,6 +98,8 @@ def bool(name, default=None, allow_none=False):
         return value
     elif isinstance(value, builtins.int):
         return True if value > 0 else False
+    elif allow_none and value is None:
+        return None
     else:
         value_str = builtins.str(value).lower().strip()
         return strtobool(value_str)

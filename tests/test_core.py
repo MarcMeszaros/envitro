@@ -116,6 +116,11 @@ class TestCore(unittest.TestCase):
         self.assertTrue(envitro.bool('DOES_NOT_EXIST', True))
         self.assertFalse(envitro.bool('DOES_NOT_EXIST', False))
 
+    def test_none_bool(self):
+        if 'DOES_NOT_EXIST_BOOL' in os.environ:
+            del os.environ['DOES_NOT_EXIST_BOOL']
+        self.assertEqual(envitro.bool('DOES_NOT_EXIST_BOOL', allow_none=True), None)
+
     def test_invalid(self):
         if 'DOES_NOT_EXIST' in os.environ:
             del os.environ['DOES_NOT_EXIST']
