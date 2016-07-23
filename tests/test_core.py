@@ -61,38 +61,44 @@ class TestCore(unittest.TestCase):
         os.environ['TEST_GET'] = 'getvar'
         self.assertEqual(envitro.get('TEST_GET'), 'getvar')
 
-    # helper testing functions
-    def assert_get_set_bool(self, value, expected_value):
-        os.environ['TEST_BOOL'] = value
-        self.assertEqual(envitro.bool('TEST_BOOL'), expected_value)
+    def test_invalid(self):
+        if 'DOES_NOT_EXIST' in os.environ:
+            del os.environ['DOES_NOT_EXIST']
+        with self.assertRaises(KeyError):
+            envitro.str('DOES_NOT_EXIST')
+
+    def test_nested_default(self):
+        self.assertEqual(envitro.int('TEST_NOPE_INT', envitro.str('TEST_NOPE_STR', '123')), 123)
+        self.assertEqual(envitro.str('TEST_NOPE_STR', envitro.int('TEST_NOPE_INT', 123)), '123')
+        self.assertEqual(envitro.bool('TEST_NOPE_BOOL', envitro.int('TEST_NOPE_INT', 123)), True)
+        self.assertEqual(envitro.bool('TEST_NOPE_BOOL', envitro.int('TEST_NOPE_INT', 0)), False)
+        self.assertEqual(envitro.bool('TEST_NOPE_BOOL', envitro.int('TEST_NOPE_INT', 123)), True)
+        self.assertEqual(envitro.bool('TEST_NOPE_BOOL', envitro.str('TEST_NOPE_STR', 'false')), False)
+        self.assertEqual(envitro.bool('TEST_NOPE_BOOL', envitro.str('TEST_NOPE_STR', '')), False)
+
+class TestCoreStr(unittest.TestCase):
 
     def assert_get_set_str(self, value, expected_value):
         os.environ['TEST_STR'] = value
         self.assertEqual(envitro.str('TEST_STR'), expected_value)
 
-    def assert_get_set_int(self, value, expected_value):
-        os.environ['TEST_INT'] = value
-        self.assertEqual(envitro.int('TEST_INT'), expected_value)
-
-    def assert_get_set_float(self, value, expected_value):
-        os.environ['TEST_FLOAT'] = value
-        self.assertEqual(envitro.float('TEST_FLOAT'), expected_value)
-
-    # actual tests
     def test_str(self):
         self.assert_get_set_str('Hello World', 'Hello World')
 
     def test_str_strip_whitespace(self):
         self.assert_get_set_str('  hello  ', 'hello')
 
-    def test_int(self):
-        self.assert_get_set_int('1234567', 1234567)
-        self.assert_get_set_int('  1234567  ', 1234567)
 
-    def test_float(self):
-        self.assert_get_set_float('123.45670', 123.4567)
-        self.assert_get_set_float('  12345.67  ', 12345.67)
-        self.assert_get_set_float('  0012345.67  ', 12345.67)
+class TestCoreBool(unittest.TestCase):
+
+    def assert_get_set_bool(self, value, expected_value):
+        os.environ['TEST_BOOL'] = value
+        self.assertEqual(envitro.bool('TEST_BOOL'), expected_value)
+
+    def test_invalid_bool(self):
+        envitro.set('INVALID_BOOL', 'nope')
+        with self.assertRaises(ValueError):
+            envitro.bool('INVALID_BOOL')
 
     def test_bool(self):
         self.assert_get_set_bool('yes', True)
@@ -121,16 +127,31 @@ class TestCore(unittest.TestCase):
             del os.environ['DOES_NOT_EXIST_BOOL']
         self.assertEqual(envitro.bool('DOES_NOT_EXIST_BOOL', allow_none=True), None)
 
-    def test_invalid(self):
-        if 'DOES_NOT_EXIST' in os.environ:
-            del os.environ['DOES_NOT_EXIST']
-        with self.assertRaises(KeyError):
-            envitro.str('DOES_NOT_EXIST')
 
-    def test_invalid_bool(self):
-        envitro.set('INVALID_BOOL', 'nope')
-        with self.assertRaises(ValueError):
-            envitro.bool('INVALID_BOOL')
+class TestCoreInt(unittest.TestCase):
+
+    def assert_get_set_int(self, value, expected_value):
+        os.environ['TEST_INT'] = value
+        self.assertEqual(envitro.int('TEST_INT'), expected_value)
+
+    def test_int(self):
+        self.assert_get_set_int('1234567', 1234567)
+        self.assert_get_set_int('  1234567  ', 1234567)
+
+
+class TestCoreFloat(unittest.TestCase):
+
+    def assert_get_set_float(self, value, expected_value):
+        os.environ['TEST_FLOAT'] = value
+        self.assertEqual(envitro.float('TEST_FLOAT'), expected_value)
+
+    def test_float(self):
+        self.assert_get_set_float('123.45670', 123.4567)
+        self.assert_get_set_float('  12345.67  ', 12345.67)
+        self.assert_get_set_float('  0012345.67  ', 12345.67)
+
+
+class TestCoreList(unittest.TestCase):
 
     def test_list(self):
         os.environ['TEST_LIST'] = 'item1,item2,item3'
@@ -165,12 +186,3 @@ class TestCore(unittest.TestCase):
     def test_list_separator(self):
         os.environ['TEST_LIST_SEPARATOR'] = 'item1;item2;item3'
         self.assertEqual(envitro.list('TEST_LIST_SEPARATOR', separator=';'), ['item1', 'item2', 'item3'])
-
-    def test_nested_default(self):
-        self.assertEqual(envitro.int('TEST_NOPE_INT', envitro.str('TEST_NOPE_STR', '123')), 123)
-        self.assertEqual(envitro.str('TEST_NOPE_STR', envitro.int('TEST_NOPE_INT', 123)), '123')
-        self.assertEqual(envitro.bool('TEST_NOPE_BOOL', envitro.int('TEST_NOPE_INT', 123)), True)
-        self.assertEqual(envitro.bool('TEST_NOPE_BOOL', envitro.int('TEST_NOPE_INT', 0)), False)
-        self.assertEqual(envitro.bool('TEST_NOPE_BOOL', envitro.int('TEST_NOPE_INT', 123)), True)
-        self.assertEqual(envitro.bool('TEST_NOPE_BOOL', envitro.str('TEST_NOPE_STR', 'false')), False)
-        self.assertEqual(envitro.bool('TEST_NOPE_BOOL', envitro.str('TEST_NOPE_STR', '')), False)
