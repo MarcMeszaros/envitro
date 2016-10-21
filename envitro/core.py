@@ -14,10 +14,11 @@ except ImportError:
 from os import environ
 
 __all__ = [
-    'isset', 'set', 'get', 'int', 'float', 'bool', 'str', 'list'
+    'isset', 'set', 'get', 'int', 'float', 'bool', 'str', 'list', 'tuple'
 ]
 
-def strtobool(val):
+
+def _strtobool(val):
     """Convert a string representation of truth to true (1) or false (0).
 
     True values are 'y', 'yes', 't', 'true', 'on', and '1'; false values
@@ -32,6 +33,17 @@ def strtobool(val):
     else:
         raise ValueError('Invalid truth value: {0}'.format(val))
 
+
+def _str_to_list(value, separator):
+    """Convert a string to a list with sanitization."""
+    value_list = [item.strip() for item in value.split(separator)]
+    value_list_sanitized = builtins.list(filter(None, value_list))
+    if len(value_list_sanitized) > 0:
+        return value_list_sanitized
+    else:
+        raise ValueError('Invalid list variable.')
+
+
 def isset(name):
     """Return a boolean if the environment variable is set or not.
 
@@ -39,6 +51,7 @@ def isset(name):
         name: The environment variable name
     """
     return True if environ.get(name) else False
+
 
 def set(name, value):
     """Set a raw env value.
@@ -53,6 +66,7 @@ def set(name, value):
         environ[name] = builtins.str(value)
     elif environ.get(name):
         del environ[name]
+
 
 def get(name, default=None, allow_none=False):
     """Get the raw env value.
@@ -106,7 +120,7 @@ def bool(name, default=None, allow_none=False):
         return None
     else:
         value_str = builtins.str(value).lower().strip()
-        return strtobool(value_str)
+        return _strtobool(value_str)
 
 
 def int(name, default=None, allow_none=False):
@@ -160,13 +174,33 @@ def list(name, default=None, allow_none=False, separator=','):
     if isinstance(value, builtins.list):
         return value
     elif isinstance(value, builtins.str):
-        value_list = [item.strip() for item in value.split(separator)]
-        value_list_sanitized = builtins.list(filter(None, value_list))
-        if len(value_list_sanitized) > 0:
-            return value_list_sanitized
-        else:
-            raise ValueError('Invalid list variable.')
+        return _str_to_list(value, separator)
     elif value is None and allow_none:
         return None
     else:
         return [builtins.str(value)]
+
+
+def tuple(name, default=None, allow_none=False, separator=','):
+    """Get a tuple of strings or the default.
+
+    The individual list elements are whitespace-stripped.
+
+    Args:
+        name: The environment variable name
+        default: The default value to use if no environment variable is found
+        allow_none: If the return value can be `None` (i.e. optional)
+        separator: The list item separator character or pattern
+    """
+    try:
+        value = get(name, default, allow_none)
+        if isinstance(value, builtins.tuple):
+            return value
+        elif isinstance(value, builtins.str):
+            return builtins.tuple(_str_to_list(value, separator))
+        elif value is None and allow_none:
+            return None
+        else:
+            return (builtins.str(value), )
+    except ValueError:
+        raise ValueError('Invalid tuple varible.')

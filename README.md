@@ -39,11 +39,13 @@ envitro.set("RAW_STRING", " raw_string ")
 envitro.get("RAW_STRING") # returns " raw_string "
 envitro.get("MISSING_RAW_STRING", " defaultval ") # returns " defaultval "
 
-# lists
+# lists/tuples
 os.environ["LIST_ENV"] = "item1,item2,item3"
 list_required = envitro.list("LIST_ENV") # returns ["item1", "item2", "item3"]
+tuple_required = envitro.tuple("LIST_ENV") # returns ("item1", "item2", "item3")
 os.environ["LIST_ENV2"] = "item1;item2;item3"
 list_required2 = envitro.list("LIST_ENV2", separator=";") # returns ["item1", "item2", "item3"]
+tuple_required2 = envitro.tuple("LIST_ENV2", separator=";") # returns ("item1", "item2", "item3")
 
 # utility functions
 envitro.isset("MAYBE_SET_VARIABLE") # return True/False

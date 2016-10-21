@@ -206,3 +206,45 @@ class TestCoreList(unittest.TestCase):
     def test_list_separator(self):
         os.environ['TEST_LIST_SEPARATOR'] = 'item1;item2;item3'
         self.assertEqual(envitro.list('TEST_LIST_SEPARATOR', separator=';'), ['item1', 'item2', 'item3'])
+
+
+class TestCoreTuple(unittest.TestCase):
+
+    def test_tuple(self):
+        os.environ['TEST_TUPLE'] = 'item1,item2,item3'
+        self.assertEqual(envitro.tuple('TEST_TUPLE'), ('item1', 'item2', 'item3'))
+        os.environ['TEST_TUPLE'] = 'item1,item2'
+        self.assertEqual(envitro.tuple('TEST_TUPLE'), ('item1', 'item2'))
+        os.environ['TEST_TUPLE'] = 'item1'
+        self.assertEqual(envitro.tuple('TEST_TUPLE'), ('item1', ))
+        os.environ['TEST_TUPLE'] = 'item1,'
+        self.assertEqual(envitro.tuple('TEST_TUPLE'), ('item1', ))
+        os.environ['TEST_TUPLE'] = ',item1,'
+        self.assertEqual(envitro.tuple('TEST_TUPLE'), ('item1', ))
+
+    def test_tuple_required(self):
+        os.environ['TEST_TUPLE_REQUIRED'] = ''
+        with self.assertRaises(ValueError):
+            envitro.tuple('TEST_TUPLE_REQUIRED')
+
+    def test_none_tuple(self):
+        if 'DOES_NOT_EXIST_TUPLE' in os.environ:
+            del os.environ['DOES_NOT_EXIST_TUPLE']
+        self.assertEqual(envitro.tuple('DOES_NOT_EXIST_TUPLE', allow_none=True), None)
+
+    def test_tuple_spaces(self):
+        os.environ['TEST_TUPLE_SPACES'] = '  item1 , item2 , item3  '
+        self.assertEqual(envitro.tuple('TEST_LIST_SPACES'), ('item1', 'item2', 'item3'))
+        os.environ['TEST_TUPLE_SPACES'] = ' , item1 , item2 , item3 , , ,, '
+        self.assertEqual(envitro.tuple('TEST_TUPLE_SPACES'), ('item1', 'item2', 'item3'))
+
+    def test_default_tuple(self):
+        if 'DOES_NOT_EXIST' in os.environ:
+            del os.environ['DOES_NOT_EXIST']
+        self.assertEqual(envitro.tuple('DOES_NOT_EXIST', ('item1', )), ('item1', ))
+        self.assertEqual(envitro.tuple('DOES_NOT_EXIST', ('item1', 'item2')), ('item1', 'item2'))
+        self.assertEqual(envitro.tuple('DOES_NOT_EXIST', 'item1,item2'), ('item1', 'item2'))
+
+    def test_tuple_separator(self):
+        os.environ['TEST_TUPLE_SEPARATOR'] = 'item1;item2;item3'
+        self.assertEqual(envitro.tuple('TEST_TUPLE_SEPARATOR', separator=';'), ('item1', 'item2', 'item3'))
