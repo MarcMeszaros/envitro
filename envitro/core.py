@@ -11,11 +11,8 @@ try:
 except ImportError:
     import __builtin__ as builtins
 
+import warnings
 from os import environ
-
-__all__ = [
-    'isset', 'set', 'get', 'int', 'float', 'bool', 'str', 'list', 'tuple'
-]
 
 
 def _strtobool(val):
@@ -53,14 +50,14 @@ def isset(name):
     return True if environ.get(name) else False
 
 
-def set(name, value):
-    """Set a raw env value.
+def write(name, value):
+    """Write a raw env value.
 
     A ``None`` value clears the environment variable.
 
     Args:
         name: The environment variable name
-        value: The value to set
+        value: The value to write
     """
     if value is not None:
         environ[name] = builtins.str(value)
@@ -68,10 +65,15 @@ def set(name, value):
         del environ[name]
 
 
-def get(name, default=None, allow_none=False):
-    """Get the raw env value.
+def set(name, value):
+    warnings.warn('Will be removed in v1.0', DeprecationWarning, stacklevel=2)
+    write(name, value)
 
-    Get the raw environment variable or use the default. If the value is not
+
+def read(name, default=None, allow_none=False):
+    """Read the raw env value.
+
+    Read the raw environment variable or use the default. If the value is not
     found and no default is set throw an exception.
 
     Args:
@@ -88,6 +90,11 @@ def get(name, default=None, allow_none=False):
         raise KeyError('Set the "{0}" environment variable'.format(name))
 
 
+def get(name, default=None, allow_none=False):
+    warnings.warn('Will be removed in v1.0', DeprecationWarning, stacklevel=2)
+    return read(name, default, allow_none)
+
+
 def str(name, default=None, allow_none=False):
     """Get a string based environment value or the default.
 
@@ -96,7 +103,7 @@ def str(name, default=None, allow_none=False):
         default: The default value to use if no environment variable is found
         allow_none: If the return value can be `None` (i.e. optional)
     """
-    value = get(name, default, allow_none)
+    value = read(name, default, allow_none)
     if value is None and allow_none:
         return None
     else:
@@ -111,7 +118,7 @@ def bool(name, default=None, allow_none=False):
         default: The default value to use if no environment variable is found
         allow_none: If the return value can be `None` (i.e. optional)
     """
-    value = get(name, default, allow_none)
+    value = read(name, default, allow_none)
     if isinstance(value, builtins.bool):
         return value
     elif isinstance(value, builtins.int):
@@ -131,7 +138,7 @@ def int(name, default=None, allow_none=False):
         default: The default value to use if no environment variable is found
         allow_none: If the return value can be `None` (i.e. optional)
     """
-    value = get(name, default, allow_none)
+    value = read(name, default, allow_none)
     if isinstance(value, builtins.str):
         value = value.strip()
 
@@ -149,7 +156,7 @@ def float(name, default=None, allow_none=False):
         default: The default value to use if no environment variable is found
         allow_none: If the return value can be `None` (i.e. optional)
     """
-    value = get(name, default, allow_none)
+    value = read(name, default, allow_none)
     if isinstance(value, builtins.str):
         value = value.strip()
 
@@ -170,7 +177,7 @@ def list(name, default=None, allow_none=False, separator=','):
         allow_none: If the return value can be `None` (i.e. optional)
         separator: The list item separator character or pattern
     """
-    value = get(name, default, allow_none)
+    value = read(name, default, allow_none)
     if isinstance(value, builtins.list):
         return value
     elif isinstance(value, builtins.str):
@@ -193,7 +200,7 @@ def tuple(name, default=None, allow_none=False, separator=','):
         separator: The list item separator character or pattern
     """
     try:
-        value = get(name, default, allow_none)
+        value = read(name, default, allow_none)
         if isinstance(value, builtins.tuple):
             return value
         elif isinstance(value, builtins.str):

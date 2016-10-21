@@ -34,10 +34,10 @@ float_default = envitro.float("FLOAT_NOT_FOUND", 42.44)
 str_default = envitro.str("STRING_NOT_FOUND", "my_default")
 
 # get and set raw environment variables
-envitro.set("EXISTING_VAR", None) # clear the environment variable
-envitro.set("RAW_STRING", " raw_string ")
-envitro.get("RAW_STRING") # returns " raw_string "
-envitro.get("MISSING_RAW_STRING", " defaultval ") # returns " defaultval "
+envitro.write("EXISTING_VAR", None) # clear the environment variable
+envitro.write("RAW_STRING", " raw_string ")
+envitro.read("RAW_STRING") # returns " raw_string "
+envitro.read("MISSING_RAW_STRING", " defaultval ") # returns " defaultval "
 
 # lists/tuples
 os.environ["LIST_ENV"] = "item1,item2,item3"
@@ -64,19 +64,19 @@ import envitro
 def foo():
     return "Hello World"
 
-envitro.set('ALLOW_FOO', '1')
+envitro.write('ALLOW_FOO', '1')
 foo() # allowed
 
-envitro.set('ALLOW_FOO', None)
+envitro.write('ALLOW_FOO', None)
 foo() # return "None" and is not executed
 
 @envitro.decorators.bool('ALLOW_REMOTE')
 def get_remote(arg1, arg2):
     return call_remote_service(arg1, arg2)
 
-envitro.set('ALLOW_REMOTE', 'True')
+envitro.write('ALLOW_REMOTE', 'True')
 get_remote('hello', 'world') # calls remote service
 
-envitro.set('ALLOW_REMOTE', 'False')
+envitro.write('ALLOW_REMOTE', 'False')
 get_remote('hello', 'world') # returns "None" and is not executed
 ```

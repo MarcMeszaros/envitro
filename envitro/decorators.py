@@ -8,12 +8,13 @@ as a syntactically nice way of enabling/disabling automated tests based on
 environment variables.
 """
 from __future__ import absolute_import
-
 import functools
+import warnings
 
 from . import core
 
-def set(name, value):
+
+def write(name, value):
     """Temporarily change or set the environment variable during the execution of a function.
 
     Args:
@@ -26,13 +27,19 @@ def set(name, value):
     def wrapped(func):
         @functools.wraps(func)
         def _decorator(*args, **kwargs):
-            existing_env = core.get(name, allow_none=True)
-            core.set(name, value)
+            existing_env = core.read(name, allow_none=True)
+            core.write(name, value)
             func_val = func(*args, **kwargs)
-            core.set(name, existing_env)
+            core.write(name, existing_env)
             return func_val
         return _decorator
     return wrapped
+
+
+def set(name, value):
+    warnings.warn('Will be removed in v1.0', DeprecationWarning, stacklevel=2)
+    return write(name, value)
+
 
 def isset(name):
     """Only execute the function if the variable is set.
@@ -50,6 +57,7 @@ def isset(name):
                 return func(*args, **kwargs)
         return _decorator
     return wrapped
+
 
 def bool(name, execute_bool=True, default=None):
     """Only execute the function if the boolean variable is set.
