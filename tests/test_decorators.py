@@ -67,3 +67,18 @@ class TestDecorators(unittest.TestCase):
         def myfunc4():
             return True
         self.assertTrue(myfunc4())
+
+        @envitro.decorators.bool('SET_BOOL_NO_DEFAULT', execute_bool=False)
+        def myfunc5():
+            return True
+        self.assertEqual(myfunc5(), None)
+
+        @envitro.decorators.bool('SET_BOOL_DEFAULT_NO_EXEC', execute_bool=False, default=True)
+        def myfunc6():
+            return True
+        self.assertEqual(myfunc6(), None)
+
+        @envitro.decorators.bool('SET_BOOL_DEFAULT_EXEC', execute_bool=False, default=False)
+        def myfunc7():
+            return True
+        self.assertTrue(myfunc7())
