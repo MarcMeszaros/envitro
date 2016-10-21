@@ -12,31 +12,31 @@ import envitro.docker
 class TestDocker(unittest.TestCase):
 
     def test_isset(self):
-        envitro.set('DB_PORT', 'tcp://172.17.0.82:5432')
+        envitro.write('DB_PORT', 'tcp://172.17.0.82:5432')
         self.assertTrue(envitro.docker.isset('DB'))
-        envitro.set('NODB_PORT', None)
+        envitro.write('NODB_PORT', None)
         self.assertFalse(envitro.docker.isset('NODB'))
 
     @mock.patch('warnings.warn')
     def test_isset_invalid_looking(self, mock_warn):
-        envitro.set('INVALIDDB_PORT', 'nodockerlinkhere')
+        envitro.write('INVALIDDB_PORT', 'nodockerlinkhere')
         self.assertFalse(envitro.docker.isset('INVALIDDB'))
         self.assertTrue(mock_warn.called)
 
     @mock.patch('warnings.warn')
     def test_isset_invalid_looking_port(self, mock_warn):
-        envitro.set('BADPORT_PORT', 'tcp://172.17.0.82:notaport')
+        envitro.write('BADPORT_PORT', 'tcp://172.17.0.82:notaport')
         self.assertFalse(envitro.docker.isset('BADPORT'))
         self.assertTrue(mock_warn.called)
 
-    def test_get(self):
-        envitro.set('DB_PORT', 'tcp://172.17.0.82:5432')
-        self.assertEqual(envitro.docker.get('DB'), 'tcp://172.17.0.82:5432')
-        envitro.set('NODB_PORT', None)
-        self.assertEqual(envitro.docker.get('NODB', allow_none=True), None)
+    def test_read(self):
+        envitro.write('DB_PORT', 'tcp://172.17.0.82:5432')
+        self.assertEqual(envitro.docker.read('DB'), 'tcp://172.17.0.82:5432')
+        envitro.write('NODB_PORT', None)
+        self.assertEqual(envitro.docker.read('NODB', allow_none=True), None)
 
     def test_protocol(self):
-        envitro.set('DB_PORT', 'tcp://172.17.0.82:5432')
+        envitro.write('DB_PORT', 'tcp://172.17.0.82:5432')
         self.assertEqual(envitro.docker.protocol('DB'), 'tcp')
 
     def test_protocol_required(self):
@@ -56,7 +56,7 @@ class TestDocker(unittest.TestCase):
         self.assertEqual(envitro.docker.protocol('DB_DEFAULT_NONE', allow_none=True), None)
 
     def test_host(self):
-        envitro.set('DB_PORT', 'tcp://172.17.0.82:5432')
+        envitro.write('DB_PORT', 'tcp://172.17.0.82:5432')
         self.assertEqual(envitro.docker.host('DB'), '172.17.0.82')
 
     def test_host_required(self):
@@ -76,7 +76,7 @@ class TestDocker(unittest.TestCase):
         self.assertEqual(envitro.docker.host('DB_DEFAULT_NONE', allow_none=True), None)
 
     def test_port(self):
-        envitro.set('DB_PORT', 'tcp://172.17.0.82:5432')
+        envitro.write('DB_PORT', 'tcp://172.17.0.82:5432')
         self.assertEqual(envitro.docker.port('DB'), 5432)
 
     def test_port_required(self):

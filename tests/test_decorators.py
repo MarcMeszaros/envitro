@@ -6,7 +6,7 @@ import unittest
 import envitro
 
 
-class TestSetDecorator(unittest.TestCase):
+class TestWriteDecorator(unittest.TestCase):
 
     def tearDown(self):
         if 'ENV_VAL' in os.environ:
@@ -14,8 +14,8 @@ class TestSetDecorator(unittest.TestCase):
 
     def test_set_none(self):
 
-        envitro.set('ENV_VAL', None)
-        @envitro.decorators.set('ENV_VAL', 'myval')
+        envitro.write('ENV_VAL', None)
+        @envitro.decorators.write('ENV_VAL', 'myval')
         def myfunc():
             self.assertEqual(os.environ['ENV_VAL'], 'myval')
 
@@ -26,7 +26,7 @@ class TestSetDecorator(unittest.TestCase):
     def test_set_string(self):
 
         os.environ['ENV_VAL'] = 'val'
-        @envitro.decorators.set('ENV_VAL', 'newval')
+        @envitro.decorators.write('ENV_VAL', 'newval')
         def myfunc():
             self.assertEqual(os.environ['ENV_VAL'], 'newval')
 

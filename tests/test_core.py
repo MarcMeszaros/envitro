@@ -17,49 +17,49 @@ class TestCore(unittest.TestCase):
             del os.environ['TEST_ISSET_FALSE']
         self.assertFalse(envitro.isset('TEST_ISSET_FALSE'))
 
-    def test_set(self):
-        envitro.set('TEST_SET', 'setvar')
+    def test_write(self):
+        envitro.write('TEST_SET', 'setvar')
         self.assertEqual(os.environ['TEST_SET'], 'setvar')
-        envitro.set('TEST_SET_SPACES', '  spacesvar  ')
+        envitro.write('TEST_SET_SPACES', '  spacesvar  ')
         self.assertEqual(os.environ['TEST_SET_SPACES'], '  spacesvar  ')
-        envitro.set('TEST_SET_INT', 123)
+        envitro.write('TEST_SET_INT', 123)
         self.assertEqual(os.environ['TEST_SET_INT'], '123')
-        envitro.set('TEST_SET_BOOL', True)
+        envitro.write('TEST_SET_BOOL', True)
         self.assertEqual(os.environ['TEST_SET_BOOL'], 'True')
 
-    def test_set_clear(self):
+    def test_write_clear(self):
         os.environ['TEST_ALREADY_SET'] = 'myvar'
-        envitro.set('TEST_ALREADY_SET', None)
+        envitro.write('TEST_ALREADY_SET', None)
         self.assertEqual(os.environ.get('TEST_ALREADY_SET'), None)
 
         if 'TEST_ALREADY_SET_MISSING' in os.environ:
             del os.environ['TEST_ALREADY_SET_MISSING']
-        envitro.set('TEST_ALREADY_SET_MISSING', None)
+        envitro.write('TEST_ALREADY_SET_MISSING', None)
         self.assertEqual(os.environ.get('TEST_ALREADY_SET_MISSING'), None)
 
-    def test_get_default(self):
+    def test_read_default(self):
         if 'TEST_DEFAULT_GET' in os.environ:
             del os.environ['TEST_DEFAULT_GET']
-        self.assertEqual(envitro.get('TEST_DEFAULT_GET', 'defaultval'), 'defaultval')
+        self.assertEqual(envitro.read('TEST_DEFAULT_GET', 'defaultval'), 'defaultval')
 
-    def test_get_none(self):
+    def test_read_none(self):
         if 'TEST_DEFAULT_GET_NONE' in os.environ:
             del os.environ['TEST_DEFAULT_GET_NONE']
-        self.assertEqual(envitro.get('TEST_DEFAULT_GET_NONE', allow_none=True), None)
+        self.assertEqual(envitro.read('TEST_DEFAULT_GET_NONE', allow_none=True), None)
 
         if 'TEST_DEFAULT_GET_NONE_DEFAULT' in os.environ:
             del os.environ['TEST_DEFAULT_GET_NONE_DEFAULT']
         self.assertEqual(
-            envitro.get('TEST_DEFAULT_GET_NONE_DEFAULT', default='defaultval', allow_none=True), 'defaultval')
+            envitro.read('TEST_DEFAULT_GET_NONE_DEFAULT', default='defaultval', allow_none=True), 'defaultval')
 
-    def test_invalid_get(self):
+    def test_invalid_read(self):
         if 'TEST_INVALID_GET' in os.environ:
             del os.environ['TEST_INVALID_GET']
-        self.assertRaises(KeyError, lambda: envitro.get('TEST_INVALID_GET'))
+        self.assertRaises(KeyError, lambda: envitro.read('TEST_INVALID_GET'))
 
-    def test_get(self):
+    def test_read(self):
         os.environ['TEST_GET'] = 'getvar'
-        self.assertEqual(envitro.get('TEST_GET'), 'getvar')
+        self.assertEqual(envitro.read('TEST_GET'), 'getvar')
 
     def test_invalid(self):
         if 'DOES_NOT_EXIST' in os.environ:
@@ -75,6 +75,7 @@ class TestCore(unittest.TestCase):
         self.assertEqual(envitro.bool('TEST_NOPE_BOOL', envitro.int('TEST_NOPE_INT', 123)), True)
         self.assertEqual(envitro.bool('TEST_NOPE_BOOL', envitro.str('TEST_NOPE_STR', 'false')), False)
         self.assertEqual(envitro.bool('TEST_NOPE_BOOL', envitro.str('TEST_NOPE_STR', '')), False)
+
 
 class TestCoreStr(unittest.TestCase):
 
@@ -101,7 +102,7 @@ class TestCoreBool(unittest.TestCase):
         self.assertEqual(envitro.bool('TEST_BOOL'), expected_value)
 
     def test_invalid_bool(self):
-        envitro.set('INVALID_BOOL', 'nope')
+        envitro.write('INVALID_BOOL', 'nope')
         with self.assertRaises(ValueError):
             envitro.bool('INVALID_BOOL')
 

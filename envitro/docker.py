@@ -24,7 +24,8 @@ def _split_docker_link(alias_name):
     # cast to list (required for python3)
     return list(filter(None, split_list))
 
-def get(alias_name, allow_none=False):
+
+def read(alias_name, allow_none=False):
     """Get the raw docker link value.
 
     Get the raw environment variable for the docker link
@@ -35,7 +36,13 @@ def get(alias_name, allow_none=False):
         allow_none: If the return value can be `None` (i.e. optional)
     """
     warnings.warn('Will be removed in v1.0', DeprecationWarning, stacklevel=2)
-    return core.get('{0}_PORT'.format(alias_name), default=None, allow_none=allow_none)
+    return core.read('{0}_PORT'.format(alias_name), default=None, allow_none=allow_none)
+
+
+def get(alias_name, allow_none=False):
+    warnings.warn('Will be removed in v1.0', DeprecationWarning, stacklevel=2)
+    return read(alias_name, allow_none)
+
 
 def isset(alias_name):
     """Return a boolean if the docker link is set or not and is a valid looking docker link value.
@@ -44,7 +51,7 @@ def isset(alias_name):
         alias_name: The link alias name
     """
     warnings.warn('Will be removed in v1.0', DeprecationWarning, stacklevel=2)
-    raw_value = get(alias_name, allow_none=True)
+    raw_value = read(alias_name, allow_none=True)
     if raw_value:
         if re.compile(r'.+://.+:\d+').match(raw_value):
             return True
