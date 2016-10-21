@@ -6,79 +6,95 @@ import unittest
 import envitro
 
 
-class TestDecorators(unittest.TestCase):
+class TestSetDecorator(unittest.TestCase):
+
+    def tearDown(self):
+        if 'ENV_VAL' in os.environ:
+            del os.environ['ENV_VAL']
 
     def test_set_none(self):
 
-        envitro.set('SET', None)
-        @envitro.decorators.set('SET', 'myval')
+        envitro.set('ENV_VAL', None)
+        @envitro.decorators.set('ENV_VAL', 'myval')
         def myfunc():
-            self.assertEqual(os.environ['SET'], 'myval')
+            self.assertEqual(os.environ['ENV_VAL'], 'myval')
 
         myfunc()
         with self.assertRaises(KeyError):
-            os.environ['SET']
+            os.environ['ENV_VAL']
 
     def test_set_string(self):
 
-        os.environ['SET2'] = 'val'
-        @envitro.decorators.set('SET2', 'newval')
-        def myfunc2():
-            self.assertEqual(os.environ['SET2'], 'newval')
+        os.environ['ENV_VAL'] = 'val'
+        @envitro.decorators.set('ENV_VAL', 'newval')
+        def myfunc():
+            self.assertEqual(os.environ['ENV_VAL'], 'newval')
 
-        myfunc2()
-        self.assertEqual(os.environ['SET2'], 'val')
+        myfunc()
+        self.assertEqual(os.environ['ENV_VAL'], 'val')
 
+
+class TestIsSetDecorator(unittest.TestCase):
+
+    def tearDown(self):
+        if 'ENV_VAL' in os.environ:
+            del os.environ['ENV_VAL']
 
     def test_isset(self):
+        os.environ['ENV_VAL'] = 'val'
+        @envitro.decorators.isset('ENV_VAL')
+        def myfunc():
+            return True
+        self.assertTrue(myfunc())
 
-        @envitro.decorators.isset('NOT_SET')
+    def test_isset_false(self):
+        @envitro.decorators.isset('ENV_VAL')
         def myfunc():
             return True
         self.assertEqual(myfunc(), None)
 
-        os.environ['SET'] = 'val'
-        @envitro.decorators.isset('SET')
-        def myfunc2():
-            return True
-        self.assertTrue(myfunc2())
 
-    def test_bool(self):
+class TestBoolDecorator(unittest.TestCase):
 
-        @envitro.decorators.bool('NOT_SET')
+    def tearDown(self):
+        if 'ENV_VAL' in os.environ:
+            del os.environ['ENV_VAL']
+
+    def test_bool_execute(self):
+
+        @envitro.decorators.bool('ENV_VAL')
         def myfunc():
             return 'returnval'
         self.assertEqual(myfunc(), None)
 
-        os.environ['SET_FALSE'] = 'False'
-        @envitro.decorators.bool('SET_FALSE')
-        def myfunc2():
-            return 'returnval2'
-        self.assertEqual(myfunc2(), None)
+    def test_bool_no_execute(self):
+        os.environ['ENV_VAL'] = 'False'
+        @envitro.decorators.bool('ENV_VAL')
+        def myfunc():
+            return 'returnval'
+        self.assertEqual(myfunc(), None)
 
-        os.environ['SET_FALSE_EXEC'] = 'False'
-        @envitro.decorators.bool('SET_FALSE_EXEC', execute_bool=False)
-        def myfunc3():
-            return 'returnval3'
-        self.assertEqual(myfunc3(), 'returnval3')
+    def test_bool_execute_value(self):
+        os.environ['ENV_VAL'] = 'False'
+        @envitro.decorators.bool('ENV_VAL', execute_bool=False)
+        def myfunc():
+            return 'returnval'
+        self.assertEqual(myfunc(), 'returnval')
 
-        os.environ['SET_TRUE'] = 'True'
-        @envitro.decorators.bool('SET_TRUE')
-        def myfunc4():
+    def test_bool_execute_value_no_execute(self):
+        @envitro.decorators.bool('ENV_VAL', execute_bool=False)
+        def myfunc():
             return True
-        self.assertTrue(myfunc4())
+        self.assertEqual(myfunc(), None)
 
-        @envitro.decorators.bool('SET_BOOL_NO_DEFAULT', execute_bool=False)
-        def myfunc5():
+    def test_bool_execute_value_default_execute(self):
+        @envitro.decorators.bool('ENV_VAL_DEFAULT_NO_EXEC', execute_bool=False, default=False)
+        def myfunc():
             return True
-        self.assertEqual(myfunc5(), None)
+        self.assertTrue(myfunc())
 
-        @envitro.decorators.bool('SET_BOOL_DEFAULT_NO_EXEC', execute_bool=False, default=True)
-        def myfunc6():
+    def test_bool_execute_value_default_no_execute(self):
+        @envitro.decorators.bool('ENV_VAL_DEFAULT_NO_EXEC', execute_bool=False, default=True)
+        def myfunc():
             return True
-        self.assertEqual(myfunc6(), None)
-
-        @envitro.decorators.bool('SET_BOOL_DEFAULT_EXEC', execute_bool=False, default=False)
-        def myfunc7():
-            return True
-        self.assertTrue(myfunc7())
+        self.assertEqual(myfunc(), None)
