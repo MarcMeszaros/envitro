@@ -5,7 +5,7 @@ import os
 
 from setuptools import setup
 
-from envitro import meta
+import envitro
 
 
 # Get the long description from the relevant file
@@ -19,7 +19,7 @@ except IOError:
 
 setup(
     name='envitro',
-    version=meta.__version__,
+    version=envitro.__version__,
     packages=['envitro'],
     description='A module for reading and writing environment variables.',
     long_description=long_description,
