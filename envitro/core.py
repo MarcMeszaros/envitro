@@ -70,7 +70,7 @@ def set(name, value):
     write(name, value)
 
 
-def read(name, default=None, allow_none=False):
+def read(name, default=None, allow_none=False, fallback=None):
     """Read the raw env value.
 
     Read the raw environment variable or use the default. If the value is not
@@ -80,8 +80,19 @@ def read(name, default=None, allow_none=False):
         name: The environment variable name
         default: The default value to use if no environment variable is found
         allow_none: If the return value can be `None` (i.e. optional)
+        fallback: A list of fallback env variables to try and read if the primary environment
+                  variable is unavailable.
     """
     raw_value = environ.get(name)
+    if raw_value is None and fallback is not None:
+        if not isinstance(fallback, builtins.list) and not isinstance(fallback, builtins.tuple):
+            fallback = [fallback]
+
+        for fall in fallback:
+            raw_value = environ.get(fall)
+            if raw_value is not None:
+                break
+
     if raw_value or raw_value == '':
         return raw_value
     elif default is not None or allow_none:
@@ -95,7 +106,7 @@ def get(name, default=None, allow_none=False):
     return read(name, default, allow_none)
 
 
-def str(name, default=None, allow_none=False):
+def str(name, default=None, allow_none=False, fallback=None):
     """Get a string based environment value or the default.
 
     Args:
@@ -103,14 +114,14 @@ def str(name, default=None, allow_none=False):
         default: The default value to use if no environment variable is found
         allow_none: If the return value can be `None` (i.e. optional)
     """
-    value = read(name, default, allow_none)
+    value = read(name, default, allow_none, fallback=fallback)
     if value is None and allow_none:
         return None
     else:
         return builtins.str(value).strip()
 
 
-def bool(name, default=None, allow_none=False):
+def bool(name, default=None, allow_none=False, fallback=None):
     """Get a boolean based environment value or the default.
 
     Args:
@@ -118,7 +129,7 @@ def bool(name, default=None, allow_none=False):
         default: The default value to use if no environment variable is found
         allow_none: If the return value can be `None` (i.e. optional)
     """
-    value = read(name, default, allow_none)
+    value = read(name, default, allow_none, fallback=fallback)
     if isinstance(value, builtins.bool):
         return value
     elif isinstance(value, builtins.int):
@@ -130,7 +141,7 @@ def bool(name, default=None, allow_none=False):
         return _strtobool(value_str)
 
 
-def int(name, default=None, allow_none=False):
+def int(name, default=None, allow_none=False, fallback=None):
     """Get a string environment value or the default.
 
     Args:
@@ -138,7 +149,7 @@ def int(name, default=None, allow_none=False):
         default: The default value to use if no environment variable is found
         allow_none: If the return value can be `None` (i.e. optional)
     """
-    value = read(name, default, allow_none)
+    value = read(name, default, allow_none, fallback=fallback)
     if isinstance(value, builtins.str):
         value = value.strip()
 
@@ -148,7 +159,7 @@ def int(name, default=None, allow_none=False):
         return builtins.int(value)
 
 
-def float(name, default=None, allow_none=False):
+def float(name, default=None, allow_none=False, fallback=None):
     """Get a string environment value or the default.
 
     Args:
@@ -156,7 +167,7 @@ def float(name, default=None, allow_none=False):
         default: The default value to use if no environment variable is found
         allow_none: If the return value can be `None` (i.e. optional)
     """
-    value = read(name, default, allow_none)
+    value = read(name, default, allow_none, fallback=fallback)
     if isinstance(value, builtins.str):
         value = value.strip()
 
@@ -166,7 +177,7 @@ def float(name, default=None, allow_none=False):
         return builtins.float(value)
 
 
-def list(name, default=None, allow_none=False, separator=','):
+def list(name, default=None, allow_none=False, fallback=None, separator=','):
     """Get a list of strings or the default.
 
     The individual list elements are whitespace-stripped.
@@ -177,7 +188,7 @@ def list(name, default=None, allow_none=False, separator=','):
         allow_none: If the return value can be `None` (i.e. optional)
         separator: The list item separator character or pattern
     """
-    value = read(name, default, allow_none)
+    value = read(name, default, allow_none, fallback=fallback)
     if isinstance(value, builtins.list):
         return value
     elif isinstance(value, builtins.str):
@@ -188,7 +199,7 @@ def list(name, default=None, allow_none=False, separator=','):
         return [builtins.str(value)]
 
 
-def tuple(name, default=None, allow_none=False, separator=','):
+def tuple(name, default=None, allow_none=False, fallback=None, separator=','):
     """Get a tuple of strings or the default.
 
     The individual list elements are whitespace-stripped.
@@ -200,7 +211,7 @@ def tuple(name, default=None, allow_none=False, separator=','):
         separator: The list item separator character or pattern
     """
     try:
-        value = read(name, default, allow_none)
+        value = read(name, default, allow_none, fallback=fallback)
         if isinstance(value, builtins.tuple):
             return value
         elif isinstance(value, builtins.str):

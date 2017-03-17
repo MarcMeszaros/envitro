@@ -28,16 +28,21 @@ os.environ["STR_ENV"] = "  var with spaces  "
 envitro.str("STR_ENV") # returns "var with spaces"
 
 # falls back to defaults
-bool_default = envitro.bool("BOOL_NOT_FOUND", False)
-int_default = envitro.int("INTEGER_NOT_FOUND", 42)
-float_default = envitro.float("FLOAT_NOT_FOUND", 42.44)
-str_default = envitro.str("STRING_NOT_FOUND", "my_default")
+bool_default = envitro.bool("BOOL_NOT_FOUND", default=False)
+int_default = envitro.int("INTEGER_NOT_FOUND", default=42)
+float_default = envitro.float("FLOAT_NOT_FOUND", default=42.44)
+str_default = envitro.str("STRING_NOT_FOUND", default="my_default")
+
+# try multiple fallback ENV variables
+os.environ["FALLBACK_ENV"] = "fallback_val"
+single_fallback = envitro.str("MISSING", fallback="FALLBACK_ENV")
+multiple_fallback = envitro.str("MISSING", fallback=["FALL_MISSING_1", "FALL_MISSING_2", "FALLBACK_ENV"])
 
 # get and set raw environment variables
 envitro.write("EXISTING_VAR", None) # clear the environment variable
 envitro.write("RAW_STRING", " raw_string ")
 envitro.read("RAW_STRING") # returns " raw_string "
-envitro.read("MISSING_RAW_STRING", " defaultval ") # returns " defaultval "
+envitro.read("MISSING_RAW_STRING", default=" defaultval ") # returns " defaultval "
 
 # lists/tuples
 os.environ["LIST_ENV"] = "item1,item2,item3"

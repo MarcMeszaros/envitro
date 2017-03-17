@@ -52,6 +52,33 @@ class TestCore(unittest.TestCase):
         self.assertEqual(
             envitro.read('TEST_DEFAULT_GET_NONE_DEFAULT', default='defaultval', allow_none=True), 'defaultval')
 
+    def test_read_fallback(self):
+        if 'TEST_PRIMARY' in os.environ:
+            del os.environ['TEST_PRIMARY']
+        self.assertEqual(envitro.read('TEST_PRIMARY', allow_none=True), None)
+
+        os.environ['TEST_FALLBACK'] = 'fallback'
+        self.assertEqual(envitro.read('TEST_PRIMARY', fallback='TEST_FALLBACK'), 'fallback')
+
+    def test_read_fallback_list(self):
+        if 'TEST_PRIMARY' in os.environ:
+            del os.environ['TEST_PRIMARY']
+        if 'TEST_FALLBACK_1' in os.environ:
+            del os.environ['TEST_FALLBACK_1']
+
+        os.environ['TEST_FALLBACK_2'] = 'fallback2'
+        self.assertEqual(envitro.read('TEST_PRIMARY', fallback=['TEST_FALLBACK_1', 'TEST_FALLBACK_2']), 'fallback2')
+
+    def test_read_fallback_list_default(self):
+        if 'TEST_PRIMARY' in os.environ:
+            del os.environ['TEST_PRIMARY']
+        if 'TEST_FALLBACK_1' in os.environ:
+            del os.environ['TEST_FALLBACK_1']
+        if 'TEST_FALLBACK_2' in os.environ:
+            del os.environ['TEST_FALLBACK_2']
+
+        self.assertEqual(envitro.read('TEST_PRIMARY', default='def', fallback=['TEST_FALLBACK_1', 'TEST_FALLBACK_2']), 'def')
+
     def test_invalid_read(self):
         if 'TEST_INVALID_GET' in os.environ:
             del os.environ['TEST_INVALID_GET']
@@ -94,6 +121,13 @@ class TestCoreStr(unittest.TestCase):
             del os.environ['DOES_NOT_EXIST_STR']
         self.assertEqual(envitro.str('DOES_NOT_EXIST_STR', allow_none=True), None)
 
+    def test_fallback(self):
+        if 'PRIMARY' in os.environ:
+            del os.environ['PRIMARY']
+
+        os.environ['FALLBACK'] = ' fallback'
+        self.assertEqual(envitro.str('PRIMARY', fallback='FALLBACK'), 'fallback')
+
 
 class TestCoreBool(unittest.TestCase):
 
@@ -133,6 +167,14 @@ class TestCoreBool(unittest.TestCase):
             del os.environ['DOES_NOT_EXIST_BOOL']
         self.assertEqual(envitro.bool('DOES_NOT_EXIST_BOOL', allow_none=True), None)
 
+    def test_fallback(self):
+        if 'PRIMARY' in os.environ:
+            del os.environ['PRIMARY']
+
+        os.environ['FALLBACK'] = ' true'
+        self.assertEqual(envitro.bool('PRIMARY', fallback='FALLBACK'), True)
+
+
 
 class TestCoreInt(unittest.TestCase):
 
@@ -148,6 +190,13 @@ class TestCoreInt(unittest.TestCase):
         if 'DOES_NOT_EXIST_INT' in os.environ:
             del os.environ['DOES_NOT_EXIST_INT']
         self.assertEqual(envitro.int('DOES_NOT_EXIST_INT', allow_none=True), None)
+
+    def test_fallback(self):
+        if 'PRIMARY' in os.environ:
+            del os.environ['PRIMARY']
+
+        os.environ['FALLBACK'] = ' 5'
+        self.assertEqual(envitro.int('PRIMARY', fallback='FALLBACK'), 5)
 
 
 class TestCoreFloat(unittest.TestCase):
@@ -165,6 +214,13 @@ class TestCoreFloat(unittest.TestCase):
         if 'DOES_NOT_EXIST_FLOAT' in os.environ:
             del os.environ['DOES_NOT_EXIST_FLOAT']
         self.assertEqual(envitro.float('DOES_NOT_EXIST_FLOAT', allow_none=True), None)
+
+    def test_fallback(self):
+        if 'PRIMARY' in os.environ:
+            del os.environ['PRIMARY']
+
+        os.environ['FALLBACK'] = ' 3.14'
+        self.assertEqual(envitro.float('PRIMARY', fallback='FALLBACK'), 3.14)
 
 
 class TestCoreList(unittest.TestCase):
@@ -208,6 +264,13 @@ class TestCoreList(unittest.TestCase):
         os.environ['TEST_LIST_SEPARATOR'] = 'item1;item2;item3'
         self.assertEqual(envitro.list('TEST_LIST_SEPARATOR', separator=';'), ['item1', 'item2', 'item3'])
 
+    def test_fallback(self):
+        if 'PRIMARY' in os.environ:
+            del os.environ['PRIMARY']
+
+        os.environ['FALLBACK'] = ' a,b,c'
+        self.assertEqual(envitro.list('PRIMARY', fallback='FALLBACK'), ['a', 'b', 'c'])
+
 
 class TestCoreTuple(unittest.TestCase):
 
@@ -249,3 +312,10 @@ class TestCoreTuple(unittest.TestCase):
     def test_tuple_separator(self):
         os.environ['TEST_TUPLE_SEPARATOR'] = 'item1;item2;item3'
         self.assertEqual(envitro.tuple('TEST_TUPLE_SEPARATOR', separator=';'), ('item1', 'item2', 'item3'))
+
+    def test_fallback(self):
+        if 'PRIMARY' in os.environ:
+            del os.environ['PRIMARY']
+
+        os.environ['FALLBACK'] = ' a,b,c'
+        self.assertEqual(envitro.tuple('PRIMARY', fallback='FALLBACK'), ('a', 'b', 'c'))
